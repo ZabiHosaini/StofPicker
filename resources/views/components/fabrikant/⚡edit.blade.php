@@ -1,0 +1,194 @@
+<?php
+
+use Livewire\Component;
+use App\Models\Fabrikant;
+use Livewire\WithFileUploads;
+
+new class extends Component
+{
+   use WithFileUploads;
+   public $fabrikantId;
+   public $name;
+   public $adres;
+   public $telefoon;
+   public $contactPersoon;
+   public $email;
+   Public $logo;
+
+   public $huidigeLogo;
+
+
+   public function mount($id)
+    {
+        $this->fabrikantId = $id;
+
+        $fabrikant = Fabrikant::find($id);
+        $this->name = $fabrikant->name;
+        $this->adres = $fabrikant->adres;
+        $this->telefoon = $fabrikant->telefoon;
+        $this->contactPersoon = $fabrikant->contactPersoon;
+        $this->email = $fabrikant->email;
+        $this->huidigeLogo = $fabrikant->logo;
+    
+
+    }
+
+    public function update()
+    {
+        $fabrikant = Fabrikant::find($this->fabrikantId);
+
+        $fabrikant->name=$this->name ;
+        $fabrikant->adres=$this->adres ;
+        $fabrikant->telefoon=$this->telefoon ;       
+        $fabrikant->contactPersoon=$this->contactPersoon ;        
+        $fabrikant->email=$this->email ;  
+   
+        if ($this->logo) {
+            $path = $this->logo->store('logos','public');
+            $fabrikant->logo = $path;
+        }
+        $fabrikant->save();
+
+        session()->flash('success','Deze leverancire is geupdated!');
+
+        return redirect('/fabrikant');
+        
+    }
+};
+
+
+?>
+
+<div>
+    <section class="px-4 md:px-8 w-full">
+        <div class="max-w-xl mx-auto">
+           <div class="mb-12">
+              <h2 class="text-3xl font-bold text-slate-900 mb-6 md:text-4xl dark:text-slate-50">
+                  Leveranciers Wijzigen
+              </h2>
+              <p class="text-base leading-relaxed text-slate-600 dark:text-slate-400">
+                 Have a question, need support, or want to discuss your next project? We’re here to help.
+              </p>
+           </div>
+     
+           <form wire:submit.prevent="save" class="space-y-4 justify-center">
+            <label for="Fabrikant" class="mb-2 text-slate-900 dark:text-slate-50 font-medium text-sm inline-block">Name</label>
+            <div class="flex items-center gap-1">
+                <input wire:model="name" type="text" id="name" name="name" placeholder="John doe" class="px-3 py-2.5 text-sm text-slate-900 w-full rounded-md bg-white outline-1 -outline-offset-1 outline-slate-300 focus:outline-2 focus:-outline-offset-2 focus:outline-blue-600 dark:text-slate-50 dark:bg-neutral-800 dark:outline-neutral-700" />
+            
+                @if($name && !$errors->has('name'))
+                    <div class="text-green-500 text-xs">
+                        ok✔
+                    </div>
+                @endif
+            </div>
+            @error('name')
+                <p class="text-red-500 text-xs mt-0">Deze field is verplicht!</p>
+            @enderror
+            
+                <label for="adres" class="mb-2 text-slate-900 dark:text-slate-50 font-medium text-sm inline-block">Adres</label>
+            <div class="flex items-center gap-1">
+                <input wire:model="adres" type="text" id="adres" name="adtes" placeholder="adtes"class="px-3 py-2.5 text-sm text-slate-900 w-full rounded-md bg-white outline-1 -outline-offset-1 outline-slate-300 focus:outline-2 focus:-outline-offset-2 focus:outline-blue-600 dark:text-slate-50 dark:bg-neutral-800 dark:outline-neutral-700" />
+                @if($adres && !$errors->has('adres'))
+                    <div class="text-green-500 text-xs">
+                        ok✔
+                    </div>
+                 @endif
+            </div>
+            @error('adres')
+                <p class="text-red-500 text-xs mt-0">Deze field is verplicht!</p>
+            @enderror
+            
+                <label for="telefoon"class="mb-2 text-slate-900 dark:text-slate-50 font-medium text-sm inline-block">Telefoon</label>
+            <div class="flex items-center gap-1">
+                <input wire:model="telefoon" type="text" id="telefoon" name="telefoon" placeholder="telefoon"class="px-3 py-2.5 text-sm text-slate-900 w-full rounded-md bg-white outline-1 -outline-offset-1 outline-slate-300 focus:outline-2 focus:-outline-offset-2 focus:outline-blue-600 dark:text-slate-50 dark:bg-neutral-800 dark:outline-neutral-700" />
+                @if($telefoon && !$errors->has('telefoon'))
+                    <div class="text-green-500 text-xs">
+                        ok✔
+                    </div>
+                 @endif
+            </div>
+            @error('telefoon')
+                <p class="text-red-500 text-xs mt-0">Deze field is verplicht!</p>
+            @enderror
+            <label for="contactPersoon" class="mb-2 text-slate-900 dark:text-slate-50 font-medium text-sm inline-block">ContactPersoon</label>
+            <div class="flex items-center gap-1">
+                <input wire:model="contactPersoon" type="text" id="contactPersoon" name="contactPersoon" placeholder="email"class="px-3 py-2.5 text-sm text-slate-900 w-full rounded-md bg-white outline-1 -outline-offset-1 outline-slate-300 focus:outline-2 focus:-outline-offset-2 focus:outline-blue-600 dark:text-slate-50 dark:bg-neutral-800 dark:outline-neutral-700" />
+                @if($contactPersoon && !$errors->has('contactPersoon'))
+                    <div class="text-green-500 text-xs">
+                        ok✔
+                    </div>
+                @endif
+            </div>
+             @error('contactPersoon')
+             <p class="text-red-500 text-xs mt-0">Deze field is verplicht!</p>
+             @enderror 
+                <label for="email" class="mb-2 text-slate-900 dark:text-slate-50 font-medium text-sm inline-block">Email</label>
+            <div class="flex items-center gap-1">
+                <input wire:model="email" type="email" id="email" name="email" placeholder="email"class="px-3 py-2.5 text-sm text-slate-900 w-full rounded-md bg-white outline-1 -outline-offset-1 outline-slate-300 focus:outline-2 focus:-outline-offset-2 focus:outline-blue-600 dark:text-slate-50 dark:bg-neutral-800 dark:outline-neutral-700" />
+                @if($email && !$errors->has('email'))
+                    <div class="text-green-500 text-xs">
+                        ok✔
+                    </div>
+                @endif
+            </div>
+             @error('email')
+             <p class="text-red-500 text-xs mt-0">Deze field is verplicht!</p>
+             @enderror
+             
+               <!-- File Upload -->
+            
+            <div class="flex flex-wrap items-center gap-3 sm:gap-5">
+                <div class="group" data-hs-file-upload-previews data-hs-file-upload-pseudo-trigger>
+                    @if ($logo)
+                    <img src="{{ $logo->temporaryUrl() }}" class="w-20 h-20 rounded-full object-cover border"/>
+
+                    @else  
+                         <img src="{{ asset('storage/' . $huidigeLogo) }}" class="w-20 h-20 rounded-full object-cover border"/>
+                    @endif
+   
+                </div>
+            
+                <div class="grow">
+                    <div class="flex items-center gap-x-2">
+                    <input type="file" wire:model="logo" id="logo" class="hidden">
+                    <label for="logo"
+                        class="py-2 px-3 inline-flex items-center gap-x-2 text-xs font-medium rounded-lg bg-blue-600 text-white cursor-pointer hover:bg-blue-700">
+                        <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" x2="12" y1="3" y2="15"></line></svg>
+
+                        Upload Logo
+                        </label>
+
+                        <div wire:loading wire:target="logo">
+                            <span class="text-xs text-green-400 whitespace-nowrap">
+                                Uploaden logo ..
+                            </span>
+                        </div>
+                    <button type="button" class="py-2 px-3 inline-flex items-center gap-x-2 text-xs rounded-lg bg-layer border border-layer-line text-red-500 shadow-2xs hover:bg-layer-hover focus:outline-hidden focus:bg-layer-focus disabled:opacity-50 disabled:pointer-events-none" data-hs-file-upload-clear>Delete</button>
+                    
+                    </div>
+                </div>
+            </div>
+           <!-- End File Upload -->
+            
+            
+            
+                         
+              
+     
+              <button type="submit" wire:click.prevent="update"
+                 class="py-2.5 px-4 text-sm rounded-md font-semibold cursor-pointer text-white border border-blue-600 bg-blue-600 hover:bg-blue-700 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500">Opslaan
+                 </button>
+                 <div wire:loading wire:target="update"  class="flex items-center gap-2">
+                    <span class="text-xs text-green-400 whitespace-nowrap">
+                        aan het laden..
+                    </span>
+                     
+                    <img
+                        src="https://media.tenor.com/eFde1mp-8fYAAAAM/carregando.gif"
+                        class="w-5 h-5"
+                        alt="">
+                </div>
+           </form>
+        </div>
+     </section></div>
