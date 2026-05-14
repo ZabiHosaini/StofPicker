@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
+use App\Http\Controllers\CartController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -79,6 +80,14 @@ Route::get('fabrikant' , function (){
 
     return view('wielrennen.create');
  });
+
+ //card
+ Route::get('add-to-cart/{id}',[CartController::class,'addToCart'])->name('add.to.cart');
+ Route::get('cart',[CartController::class,'cart'])->name('cart');
+
+ Route::get('/order',[CartController::class,'order'])->name('order.post');
+
+
 
 
 require __DIR__.'/auth.php';

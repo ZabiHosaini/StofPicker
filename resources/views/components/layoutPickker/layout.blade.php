@@ -6,6 +6,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindplus/elements@1" type="module"></script> 
 
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -34,7 +35,7 @@
             {{ $slot }}
         
         @else
-        <div class="flex-1 flex items-center justify-center">
+        <div class="w-full p-2">
             {{ $slot }}
         </div>
         @endif
