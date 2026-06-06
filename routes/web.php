@@ -74,18 +74,19 @@ Route::get('fabrikant' , function (){
  Route::get('wielrennen', function(){
 
     return view('wielrennen.index');
- });
+ })->name('wielrennen');
  
  Route::get('wielrennen/create', function(){
 
     return view('wielrennen.create');
- });
+   })->name('wielrennen.create');
 
  //card
  Route::get('add-to-cart/{id}',[CartController::class,'addToCart'])->name('add.to.cart');
  Route::get('cart',[CartController::class,'cart'])->name('cart');
 
  Route::get('/order',[CartController::class,'order'])->name('order.post');
+ Route::get('/order-success',[CartController::class,'orderSuccess'])->name('order.success');
 
 
 

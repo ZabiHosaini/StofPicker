@@ -11,22 +11,22 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('fabrikants', function (Blueprint $table) {
+        
+        Schema::create('order_kledings', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('adres');
-            $table->string('telefoon');
-            $table->string('contactPersoon');
-            $table->string('email');
-            $table->string('logo');
+            $table->integer("order_id");
+            $table->integer("kleding_id")->nullable();
+            $table->integer("aantalen")->nullable();
+            $table->integer("prijs")->nullable();
             $table->timestamps();
         });
     }
+
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        Schema::dropIfExists('fabrikants');
+        Schema::dropIfExists('order_kledings');
     }
 };

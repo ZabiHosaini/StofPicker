@@ -2,7 +2,9 @@
 
 use Livewire\Component;
 use App\Models\Stof;
+use App\Models\Fabrikant;
 use Livewire\WithFileUploads;
+use Livewire\Attributes\On;
 
 new class extends Component
 {
@@ -10,7 +12,6 @@ new class extends Component
 
 
     public $name; 
-    public $fabrikant; 
     public $categorie;
     public $prijs;
     public $kleur;
@@ -22,12 +23,27 @@ new class extends Component
     public $currentPhoto;
     public $productId;
 
+    
+    public $fabrikant_id;
+
+   
+    public $fabrikanten = [];
+
+  
+   
+    public function loadFabrikanten()
+    {   //dd("komt");
+        $this->fabrikanten = Fabrikant::orderBy('name')->get();
+    } 
+   
+    
+
  public function save() 
- {  
+ {   //dd($this->fabrikant_id);
      sleep(2);
     $validated = $this->validate([
             'name' => 'required|min:3',
-            'fabrikant' => 'required|min:3',
+            'fabrikant_id' => 'required|exists:fabrikants,id',
             'categorie' => 'required|min:3',
             'prijs' => 'required|integer|min:1',
             'kleur' => 'required|min:3',
@@ -56,7 +72,7 @@ new class extends Component
  
 <div>
     
-    <section class="px-4 md:px-8 w-full mt-8">
+    <section class="min-h-screen pb-[600px]">
         <div class="max-w-xl mx-auto">
            <div class="mb-12">
               <h2 class="text-3xl font-bold text-slate-900 mb-6 md:text-4xl dark:text-slate-50">
@@ -67,7 +83,7 @@ new class extends Component
               </p>
            </div>
      
-           <form wire:submit.prevent="save" class="space-y-4 justify-center">
+           <form wire:submit.prevent="save" class="space-y-4 justify-center pace-y-4 justify-center overflow-visible">
             <label for="Fabrikant" class="mb-2 text-slate-900 dark:text-slate-50 font-medium text-sm inline-block">StofName</label>
             <div class="flex items-center gap-1">
                 <input wire:model="name" type="text" id="name" name="name" placeholder="John doe" class="px-3 py-2.5 text-sm text-slate-900 w-full rounded-md bg-white outline-1 -outline-offset-1 outline-slate-300 focus:outline-2 focus:-outline-offset-2 focus:outline-blue-600 dark:text-slate-50 dark:bg-neutral-800 dark:outline-neutral-700" />
@@ -81,23 +97,25 @@ new class extends Component
             @error('name')
                 <p class="text-red-500 text-xs mt-0">Deze field is verplicht!</p>
             @enderror
-            
-                <label for="Fabrikant" class="mb-2 text-slate-900 dark:text-slate-50 font-medium text-sm inline-block">Fabrikant</label>
-            <div class="flex items-center gap-1">
-                <input wire:model="fabrikant" type="text" id="Fabrikant" name="Fabrikant" placeholder="fabrikant"class="px-3 py-2.5 text-sm text-slate-900 w-full rounded-md bg-white outline-1 -outline-offset-1 outline-slate-300 focus:outline-2 focus:-outline-offset-2 focus:outline-blue-600 dark:text-slate-50 dark:bg-neutral-800 dark:outline-neutral-700" />
-                @if($fabrikant && !$errors->has('Fabrikant'))
-                    <div class="text-green-500 text-xs">
-                        ok✔
-                    </div>
-                 @endif
+            <label class="mb-2 text-sm font-medium">Fabrikant</label>
+            <div class="overflow-visible">
+                <select wire:model="fabrikant_id" wire:focus="loadFabrikanten" class="px-3 py-2.5 text-sm text-slate-900 w-full rounded-md bg-white outline-1 -outline-offset-1 outline-slate-300 focus:outline-2 focus:-outline-offset-2 focus:outline-blue-600 dark:text-slate-50 dark:bg-neutral-800 dark:outline-neutral-700">
+                    <option value="">Selecteer fabrikant</option>
+                
+                    @foreach($fabrikanten as $fabrikant)
+                        <option value="{{ $fabrikant->id }}">
+                            {{ $fabrikant->name }}
+                        </option>
+                    @endforeach
+                </select>
             </div>
-            @error('fabrikant')
-                <p class="text-red-500 text-xs mt-0">Deze field is verplicht!</p>
+            @error('fabrikant_id')
+                <p class="text-red-500 text-xs">Deze field is verplicht!</p>
             @enderror
             
                 <label for="categorie"class="mb-2 text-slate-900 dark:text-slate-50 font-medium text-sm inline-block">Categorie</label>
             <div class="flex items-center gap-1">
-                <input wire:model="categorie" type="text" id="categorie" name="categorie" placeholder="categorie"class="px-3 py-2.5 text-sm text-slate-900 w-full rounded-md bg-white outline-1 -outline-offset-1 outline-slate-300 focus:outline-2 focus:-outline-offset-2 focus:outline-blue-600 dark:text-slate-50 dark:bg-neutral-800 dark:outline-neutral-700" />
+                <input wire:model="categorie" type="text" id="categorie" name="categorie" placeholder="categorie" class="px-3 py-2.5 text-sm text-slate-900 w-full rounded-md bg-white outline-1 -outline-offset-1 outline-slate-300 focus:outline-2 focus:-outline-offset-2 focus:outline-blue-600 dark:text-slate-50 dark:bg-neutral-800 dark:outline-neutral-700" />
                 @if($categorie && !$errors->has('categorie'))
                     <div class="text-green-500 text-xs">
                         ok✔
@@ -135,14 +153,25 @@ new class extends Component
              @enderror
              
                 <label for="status"class="mb-2 text-slate-900 dark:text-slate-50 font-medium text-sm inline-block">Status</label>
-             <div class="flex items-center gap-1"> 
-                <input wire:model="status" type="text" id="status" name="status" placeholder="status"class="px-3 py-2.5 text-sm text-slate-900 w-full rounded-md bg-white outline-1 -outline-offset-1 outline-slate-300 focus:outline-2 focus:-outline-offset-2 focus:outline-blue-600 dark:text-slate-50 dark:bg-neutral-800 dark:outline-neutral-700" />
-                @if($status && !$errors->has('status'))
-                    <div class="text-green-500 text-xs">
-                        ok✔
-                    </div>
-                @endif
-            </div>
+                <div class="flex items-center gap-1">
+                    @foreach(App\Enums\Status::cases() as $status)
+    
+                    <label>
+                        <input type="radio"
+                               wire:model="status"
+                               name="size"
+                               value="{{ $status->value }}">
+                    
+                        {{ $status->value }}
+                    </label>
+                    
+                    @endforeach               
+                     @if($status && !$errors->has('status'))
+                        <div class="text-green-500 text-xs">
+                            ok✔
+                        </div>
+                     @endif
+                </div>
              @error('status')
              <p class="text-red-500 text-xs mt-0">Deze field is verplicht!</p>
              @enderror

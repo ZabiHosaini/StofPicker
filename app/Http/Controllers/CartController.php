@@ -9,9 +9,13 @@ class CartController extends Controller
 {
    public function addToCart($id)
    {
+     // session()->forget('cart');
+
      $kleding = Kleding::find($id);
 
      $cart = session('cart', []);
+
+     //dd($cart[$id]['aantalen']);
      
      if (isset($cart[$id])) {
          $cart[$id]['aantalen'] = $cart[$id]['aantalen'] + 1;

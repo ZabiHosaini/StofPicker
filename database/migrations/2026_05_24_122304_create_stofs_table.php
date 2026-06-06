@@ -13,8 +13,12 @@ return new class extends Migration
     {
         Schema::create('stofs', function (Blueprint $table) {
             $table->id();
+        
+            $table->foreignId('fabrikant_id')
+                  ->constrained('fabrikants')
+                  ->cascadeOnDelete();
+        
             $table->string('name');
-            $table->string('fabrikant');
             $table->string('categorie');
             $table->integer('prijs');
             $table->string('kleur');
@@ -22,7 +26,7 @@ return new class extends Migration
             $table->integer('vooraad');
             $table->string('foto');
             $table->text('omschrijving');
-
+        
             $table->timestamps();
         });
     }

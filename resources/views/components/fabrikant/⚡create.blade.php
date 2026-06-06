@@ -15,6 +15,8 @@ new class extends Component
    public $email;
    Public $logo;
 
+   
+
 
 public function save()
 {  
@@ -33,11 +35,13 @@ public function save()
 
     Fabrikant::create($vaidated);
 
-    $this->reset();
+    $this->dispatch('fabrikantUpdated');
+
+   // $this->reset();
 
      session()->flash('success',  'Deze Fabrikant is Toegevoegd!');
  
-    return redirect('fabrikant');
+   // return redirect('fabrikant');
 
 
 }

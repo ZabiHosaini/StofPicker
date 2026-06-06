@@ -3,51 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindplus/elements@1" type="module"></script> 
-
+    <title>{{ $title ?? 'App' }}</title>
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-       
     @livewireStyles
-
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
 </head>
-<body>
+
+<body class="min-h-screen bg-gray-100">
+
+    <div class="drawer lg:drawer-open">
+
+        <input id="drawer" type="checkbox" class="drawer-toggle" />
     
-    @props(['indexPage' => false])
+        <div class="drawer-content flex flex-col min-h-screen">
     
-    <x-layoutPickker.nav>
-
-    </x-layoutPickker.nav>
-
-    <div class="flex min-h-screen">
-
-        <x-layoutPickker.side>
-
-        </x-layoutPickker.side>
-        
-        @if ($indexPage)
-        
-            {{ $slot }}
-        
-        @else
-        <div class="w-full p-2">
-            {{ $slot }}
+            <!-- NAV -->
+            <livewire:nav />
+    
+            <!-- PAGE CONTENT -->
+            <main class="flex-1 p-4 mr-20">
+                {{ $slot }}
+            </main>
+    
         </div>
-        @endif
-
-
-        
-        
+    
+        <livewire:side />
+    
     </div>
-   
-    
-    
 
+@livewireScripts
 </body>
-@livewireScripts   
 </html>

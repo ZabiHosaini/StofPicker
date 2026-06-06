@@ -1,6 +1,8 @@
 <?php
 
 use Livewire\Component;
+use App\Models\Orders;
+use App\Models\Kleding;
 
 new class extends Component
 {
@@ -8,7 +10,7 @@ new class extends Component
     public $prijs;
     public $aantalen;
     public $product;
-
+    public $amount = 0;
 
     public function updateAantal($key, $aantal)
     {
@@ -33,7 +35,69 @@ new class extends Component
 
         $this->dispatch('$refresh');
     }
-    
+
+    public function saveOrder()
+{
+    $order = Orders::create([
+        "user_id" => 1,
+        "amount" => 0
+    ]);
+
+    $amount = 0;
+
+    foreach (session("cart") as $key => $value) {
+
+        $order->kledings()->create([
+            "kleding_id" => $key,
+            "aantalen" => $value["aantalen"],
+            "prijs" => $value["prijs"],
+        ]);
+
+        $amount += $value["aantalen"] * $value["prijs"];
+    }
+
+    $order->amount = $amount;
+    $order->save();
+
+    $stripe = new \Stripe\StripeClient(env('STRIPE_SECRET'));
+
+    $successURL = route('order.success', [
+        'order_id' => $order->id
+    ]) . '?session_id={CHECKOUT_SESSION_ID}';
+
+    $response = $stripe->checkout->sessions->create([
+        'success_url' => $successURL,
+
+        'customer_email' => "sayedzabi1987@gmail.com",
+
+        'line_items' => [
+            [
+                'price_data' => [
+                    'currency' => 'usd',
+
+                    'product_data' => [
+                        'name' => 'shopping',
+                    ],
+
+                    'unit_amount' => $amount * 100,
+                ],
+
+                'quantity' => 1,
+            ],
+        ],
+
+        'mode' => 'payment',
+    ]);
+
+    return redirect($response->url);
+}
+
+public function orderSuccess(Request $request)
+{
+    dd($request->all());
+}
+
+
 };
 ?>
 
@@ -112,15 +176,14 @@ new class extends Component
             </table>
             <div class="text-end mt-5">
                 
-                <form action="{{ route('order.post')}}" method="post">
-                    @csrf
-                    <a href="{{ url('wielrennen')}}" class="inline-block rounded bg-yellow-500 px-4 py-2 text-white font-semibold hover:bg-yellow-600 transition">
+                
+                    <a href="{{ url('wielrennen')}}" Wire:key="{{ $key }}" class="inline-block rounded bg-yellow-500 px-4 py-2 text-white font-semibold hover:bg-yellow-600 transition">
                         Continue Shoping
                     </a>
-                    <a href="{{ route('order.post')}}" class="inline-block rounded bg-green-600 px-4 py-2 text-white font-semibold hover:bg-green-800 transition">
+                    <a wire:click="saveOrder" href="#" class="inline-block rounded bg-green-600 px-4 py-2 text-white font-semibold hover:bg-green-800 transition">
                         Betelen
                     </a>
-                </form>
+               
             </div>
             <div class="text-end mt-5">
                 

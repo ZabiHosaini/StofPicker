@@ -42,10 +42,11 @@ new class extends Component
     #[Computed]
     public function stoffen ()
     {    //dd($this->searchText); 
-      return  Stof::when($this->searchText, function ($q)
-        {
-            $q->where('name','like','%'.$this->searchText . '%');
-        })
+      return  Stof::with('fabrikant') // relationship laden
+        ->when($this->searchText, function ($q)
+          {
+              $q->where('name','like','%'.$this->searchText . '%');
+          })
         ->orderBy($this->sortField,$this->sortDirection)
         ->paginate(5);
     }
@@ -83,8 +84,7 @@ new class extends Component
 
 
     
-    <div class=" w-10/12 bg-gray-100 ">
-        @session("success")
+<div class="w-full max-w-8xl mx-2 bg-gray-100">  @session("success")
      
     <div x-data="{show:true}"  wire:key="flash-message"
           x-init="setTimeout(() =>  show = false, 2500)" x-show = "show"                 
@@ -131,6 +131,7 @@ new class extends Component
                             @endif
                             
                         </th>
+                        <th class="px-6 py-3 text-gray-700 hover:text-gray-900 hover:underline">Fabrikant</th>
                         <th class="px-6 py-3 text-gray-700 hover:text-gray-900 hover:underline">Categorie</th>
                         <th class="px-6 py-3 text-gray-700 hover:text-gray-900 hover:underline">Prijs</th>
                         <th class="px-6 py-3 text-gray-700 hover:text-gray-900 hover:underline">Actie</th>
@@ -144,6 +145,7 @@ new class extends Component
                         
                         <td class="px-6 py-4"><img class="rounded-full" src="{{asset('storage/'.$stof->foto) }}" width="80" alt=""></td>
                         <td class="px-6 py-4"><a class="text-blue-600 hover:underline" href="/show/{{$stof->id}}">{{ $stof->name}}</a>  </td>
+                        <td class="px-6 py-4">{{ $stof->fabrikant?->name}}</td>
                         <td class="px-6 py-4">{{ $stof->categorie}}</td>
                         <td class="px-6 py-4">{{ $stof->prijs}}$</td>
                         

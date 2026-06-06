@@ -48,6 +48,8 @@ new class extends Component
             $fabrikant->logo = $path;
         }
         $fabrikant->save();
+        
+        $this->dispatch('fabrikantUpdated'); //voor add stof
 
         session()->flash('success','Deze leverancire is geupdated!');
 
