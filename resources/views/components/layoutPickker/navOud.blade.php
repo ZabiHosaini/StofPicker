@@ -15,8 +15,10 @@
 
         <ul class="flex items-center font-semibold space-x-4">
             <li><a href="/stoffen" class="hover:text-gray-400" wire:current="text-green-400 font-bold">Stoffen</a></li>
+            <li><a href="/stoffen" class="hover:text-gray-400" wire:current="text-green-400 font-bold">Stoffen</a></li>
+
             <li><a href="/fabrikant" class="hover:text-gray-400" wire:current="text-green-400 font-bold">Leveranciers</a></li>
-            <li><a href="/contact" class="hover:text-gray-400 " wire:current="text-green-400 font-bold">contact</a></li>
+            <li><a href="/contact" class="hover:text-gray-400 " wire:current="text-green-400 font-bold">contacttttt</a></li>
         </ul>
   
 

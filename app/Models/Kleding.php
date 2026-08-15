@@ -22,6 +22,11 @@ class Kleding extends Model
 
     }
 
+    public function fotos()
+    {
+        return $this->hasMany(KledingFoto::class);
+    }
+
     protected $casts = [
         'geslacht' => Geslacht::class,
     ];

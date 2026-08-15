@@ -23,6 +23,7 @@ return new class extends Migration
             $table->integer('prijs');
             $table->string('kleur');
             $table->string('status');
+            $table->integer('breed');
             $table->integer('vooraad');
             $table->string('foto');
             $table->text('omschrijving');

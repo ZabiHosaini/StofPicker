@@ -14,7 +14,7 @@ class Stof extends Model
 
     protected $fillable =  [
         
-        'name','fabrikant_id','categorie','prijs','kleur','status','vooraad','omschrijving','foto'
+        'name','fabrikant_id','categorie','prijs','kleur','status','vooraad','breed','omschrijving','foto'
     
     ];
 
@@ -23,5 +23,10 @@ class Stof extends Model
         return $this->belongsTo(Fabrikant::class);
     }
 
+    public function statusHistory()
+{
+    return $this->hasMany(StofStatusHistory::class)
+        ->latest();
+}
 
 }

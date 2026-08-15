@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Size extends Model
 {
-    protected $fillable = ['name'];
+    protected $fillable = ['size','gender'];
 
 
     public function kledings()

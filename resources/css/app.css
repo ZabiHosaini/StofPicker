@@ -9,6 +9,7 @@
 @source "../../vendor/livewire/flux-pro/stubs/**/*.blade.php";
 @source "../../vendor/livewire/flux/stubs/**/*.blade.php";
 
+
 /* dark mode */
 @custom-variant dark (&:where(.dark, .dark *));
 
@@ -28,3 +29,4 @@
     --color-zinc-900: #171717;
     --color-zinc-950: #0a0a0a;
 }
+

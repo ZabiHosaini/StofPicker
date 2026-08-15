@@ -34,7 +34,17 @@ class CartController extends Controller
 
    public function cart()
    {
-      
+      $cart = session('cart', []);
+
+      foreach ($cart as $id => $item) {
+  
+          if (!Kleding::find($id)) {
+              unset($cart[$id]);
+          }
+      }
+  
+      session()->put('cart', $cart);
+  
      
       return view("wielrennen.cart");
    }
@@ -44,6 +54,11 @@ class CartController extends Controller
       
      dd("order");
       
+   }
+
+   public function orderSuccess(Request $request)
+   {
+       return view('orderSuccess');
    }
 
 }

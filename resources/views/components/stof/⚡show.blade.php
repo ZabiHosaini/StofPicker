@@ -1,177 +1,678 @@
+
 <?php
 
 use Livewire\Component;
 use App\Models\Stof;
 
-
 new class extends Component
 {
     public $stof;
     public $id;
-    public $name; 
-    public $fabrikant; 
+    public $name;
+    public $fabrikant;
     public $categorie;
     public $prijs;
     public $kleur;
     public $status;
     public $vooraad;
+    public $breed;
     public $omschrijving;
     public $foto;
 
-
     public function mount($id)
     {
-        $stof = Stof::find($id);
+        $this->stof = Stof::with(['fabrikant', 'statusHistory'])->findOrFail($id);
 
-    $this->id = $stof->id;
-    $this->name = $stof->name;
-    $this->fabrikant = $stof->fabrikant;
-    $this->categorie = $stof->categorie;
-    $this->prijs = $stof->prijs;
-    $this->kleur = $stof->kleur;
-    $this->status = $stof->status;
-    $this->vooraad = $stof->vooraad;
-    $this->omschrijving = $stof->omschrijving;
-    $this->foto = $stof->foto;
+        $this->id = $this->stof->id;
+        $this->name = $this->stof->name;
+        $this->fabrikant = $this->stof->fabrikant;
+        $this->categorie = $this->stof->categorie;
+        $this->prijs = $this->stof->prijs;
+        $this->kleur = $this->stof->kleur;
+        $this->status = $this->stof->status;
+        $this->vooraad = $this->stof->vooraad;
+        $this->breed = $this->stof->breed;
+        $this->omschrijving = $this->stof->omschrijving;
+        $this->foto = $this->stof->foto;
     }
 };
 ?>
 
-<div>
-    <div class="bg-gray-0">
-        <div class="container mx-auto py-8">
-            <div class="grid grid-cols-4 sm:grid-cols-12 gap-6 px-4">
-                <div class="col-span-4 sm:col-span-3">
-                    <div class="bg-white shadow rounded-lg p-6">
-                        <div class="flex flex-col items-center">
-                        <img src="{{ asset('storage/' . $this->foto) }}" class="w-32 h-32 bg-gray-300 rounded-full mb-4 shrink-0">
-    
-                            </img>
-                        <h1 class="text-xl font-bold">{{ $this->name }}</h1>
-                            <p class="text-gray-700">{{ $this->fabrikant }}</p>
-                            <div class="mt-6 flex flex-wrap gap-4 justify-center">
-                                <a href="#" class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded">Contact</a>
-                                <a href="#" class="bg-gray-300 hover:bg-gray-400 text-gray-700 py-2 px-4 rounded">Resume</a>
-                            </div>
-                        </div>
-                        <hr class="my-6 border-t border-gray-300">
-                        <div class="flex flex-col">
-                            <span class="text-gray-700 uppercase font-bold tracking-wider mb-2">{{ $this->categorie }}</span>
-                            <ul>
-                                <li class="mb-2">JavaScript</li>
-                                <li class="mb-2">React</li>
-                                <li class="mb-2">Node.js</li>
-                                <li class="mb-2">HTML/CSS</li>
-                                <li class="mb-2">Tailwind Css</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-span-4 sm:col-span-9">
-                    <div class="bg-white shadow rounded-lg p-6">
-                        <h2 class="text-xl font-bold mb-4">Omschrijving</h2>
-                        <p class="text-gray-700">{{ $this->omschrijving }}
-                        </p>
-    
-                        <h3 class="font-semibold text-center mt-3 -mb-2">
-                            Find me on
-                        </h3>
-                        <div class="flex justify-center items-center gap-6 my-6">
-                            <a class="text-gray-700 hover:text-orange-600" aria-label="Visit TrendyMinds LinkedIn" href=""
-                                target="_blank">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="h-6">
-                                    <path fill="currentColor"
-                                        d="M100.28 448H7.4V148.9h92.88zM53.79 108.1C24.09 108.1 0 83.5 0 53.8a53.79 53.79 0 0 1 107.58 0c0 29.7-24.1 54.3-53.79 54.3zM447.9 448h-92.68V302.4c0-34.7-.7-79.2-48.29-79.2-48.29 0-55.69 37.7-55.69 76.7V448h-92.78V148.9h89.08v40.8h1.3c12.4-23.5 42.69-48.3 87.88-48.3 94 0 111.28 61.9 111.28 142.3V448z">
-                                    </path>
-                                </svg>
-                            </a>
-                            <a class="text-gray-700 hover:text-orange-600" aria-label="Visit TrendyMinds YouTube" href=""
-                                target="_blank">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" class="h-6">
-                                    <path fill="currentColor"
-                                        d="M549.655 124.083c-6.281-23.65-24.787-42.276-48.284-48.597C458.781 64 288 64 288 64S117.22 64 74.629 75.486c-23.497 6.322-42.003 24.947-48.284 48.597-11.412 42.867-11.412 132.305-11.412 132.305s0 89.438 11.412 132.305c6.281 23.65 24.787 41.5 48.284 47.821C117.22 448 288 448 288 448s170.78 0 213.371-11.486c23.497-6.321 42.003-24.171 48.284-47.821 11.412-42.867 11.412-132.305 11.412-132.305s0-89.438-11.412-132.305zm-317.51 213.508V175.185l142.739 81.205-142.739 81.201z">
-                                    </path>
-                                </svg>
-                            </a>
-                            <a class="text-gray-700 hover:text-orange-600" aria-label="Visit TrendyMinds Facebook" href=""
-                                target="_blank">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" class="h-6">
-                                    <path fill="currentColor"
-                                        d="m279.14 288 14.22-92.66h-88.91v-60.13c0-25.35 12.42-50.06 52.24-50.06h40.42V6.26S260.43 0 225.36 0c-73.22 0-121.08 44.38-121.08 124.72v70.62H22.89V288h81.39v224h100.17V288z">
-                                    </path>
-                                </svg>
-                            </a>
-                            <a class="text-gray-700 hover:text-orange-600" aria-label="Visit TrendyMinds Instagram" href=""
-                                target="_blank">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="h-6">
-                                    <path fill="currentColor"
-                                        d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z">
-                                    </path>
-                                </svg>
-                            </a>
-                            <a class="text-gray-700 hover:text-orange-600" aria-label="Visit TrendyMinds Twitter" href=""
-                                target="_blank">
-                                <svg class="h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-                                    <path fill="currentColor"
-                                        d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z">
-                                    </path>
-                                </svg>
-                            </a>
-                        </div>
-    
-    
-                        <h2 class="text-xl font-bold mt-6 mb-4">Extra </h2>
-                        <div class="mb-6">
-                            <div class="flex justify-between flex-wrap gap-2 w-full">
-                                <span class="text-gray-700 font-bold">Prijs</span>
-                                <p>
-                                    <span class="text-gray-700 mr-2">{{ $this->prijs }}</span>
-                                    <span class="text-gray-700">Dollar</span>
-                                </p>
-                            </div>
-                            <p class="mt-2">
-                                
-                            </p>
-                        </div>
-                        <div class="mb-6">
-                            <div class="flex items-center gap-4 w-full">
-                                <span class="text-gray-700 font-bold whitespace-nowrap">Kleur</span>
-                        
-                                <div class="flex items-center flex-1">
-                                    <span class="flex-grow border-b border-gray-400 mx-2"></span>
-                                    <span class="text-gray-700 mr-2">{{ $this->kleur }}</span>
+<div class="min-h-screen bg-slate-50">
 
-                                    <span class="text-gray-700">999</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="mb-6">
-                            <div class="flex items-center gap-4 w-full">
-                                <span class="text-gray-700 font-bold whitespace-nowrap">Status</span>
-                        
-                                <div class="flex items-center flex-1">
-                                    <span class="flex-grow border-b border-gray-400 mx-2"></span>
-                                    <span class="text-gray-700 mr-2">{{ $this->status }}</span>
+    <!-- Breadcrumb -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
 
-                                    <span class="text-gray-700">Huis</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="mb-6">
-                            <div class="flex items-center gap-4 w-full">
-                                <span class="text-gray-700 font-bold whitespace-nowrap">Voorraad</span>
-                        
-                                <div class="flex items-center flex-1">
-                                    <span class="flex-grow border-b border-gray-400 mx-2"></span>
-                                    <span class="text-gray-700 mr-2">{{ $this->vooraad }}</span>
+        <div class="flex items-center gap-2 text-sm text-gray-500">
 
-                                    <span class="text-gray-700">Meter</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <a href="/stoffen"
+               class="hover:text-green-600 transition">
+                Stoffen
+            </a>
+
+            <span>›</span>
+
+            <span class="text-gray-800 font-medium">
+                {{ $this->name }}
+            </span>
+
         </div>
+
     </div>
+
+
+    <!-- Main product -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        <div class="grid lg:grid-cols-2 gap-8">
+
+
+            <!-- FOTO -->
+            <div class="bg-white rounded-3xl shadow-sm border border-gray-100 p-6">
+
+                <div class="relative overflow-hidden rounded-2xl bg-gray-100">
+
+                    @if($this->foto)
+
+                        <img
+                            src="{{ asset('storage/' . $this->foto) }}"
+                            alt="{{ $this->name }}"
+                            class="w-full h-[450px] object-cover">
+
+                    @else
+
+                        <div class="h-[450px] flex items-center justify-center">
+
+                            <div class="text-center text-gray-400">
+
+                                <svg
+                                    class="w-20 h-20 mx-auto mb-3"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24">
+
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="1.5"
+                                        d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+
+                                </svg>
+
+                                <p>Geen afbeelding beschikbaar</p>
+
+                            </div>
+
+                        </div>
+
+                    @endif
+
+
+                    <!-- Status badge -->
+
+                    <div class="absolute top-5 left-5">
+
+                        @switch($this->status)
+
+                            @case('besteld')
+
+                                <span class="inline-flex items-center gap-2
+                                    bg-yellow-100 text-yellow-800
+                                    px-4 py-2 rounded-full
+                                    text-sm font-bold shadow-sm">
+
+                                    🛒 Besteld
+
+                                </span>
+
+                                @break
+
+                            @case('onderweg')
+
+                                <span class="inline-flex items-center gap-2
+                                    bg-blue-100 text-blue-800
+                                    px-4 py-2 rounded-full
+                                    text-sm font-bold shadow-sm">
+
+                                    🚚 Onderweg
+
+                                </span>
+
+                                @break
+
+                            @case('binnen')
+
+                                <span class="inline-flex items-center gap-2
+                                    bg-green-100 text-green-800
+                                    px-4 py-2 rounded-full
+                                    text-sm font-bold shadow-sm">
+
+                                    ✓ Binnen
+
+                                </span>
+
+                                @break
+
+                            @case('geannuleerd')
+
+                                <span class="inline-flex items-center gap-2
+                                    bg-red-100 text-red-800
+                                    px-4 py-2 rounded-full
+                                    text-sm font-bold shadow-sm">
+
+                                    ✕ Geannuleerd
+
+                                </span>
+
+                                @break
+
+                            @default
+
+                                <span class="bg-gray-100 text-gray-700
+                                    px-4 py-2 rounded-full
+                                    text-sm font-bold">
+
+                                    {{ ucfirst($this->status) }}
+
+                                </span>
+
+                        @endswitch
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- PRODUCT INFO -->
+            <div class="bg-white rounded-3xl shadow-sm border border-gray-100 p-8">
+
+                <!-- Category -->
+
+                <div class="flex items-center gap-3 mb-4">
+
+                    <span class="bg-purple-100 text-purple-700
+                        px-3 py-1 rounded-full text-sm font-semibold">
+
+                        {{ $this->categorie }}
+
+                    </span>
+
+                </div>
+
+
+                <!-- Title -->
+
+                <h1 class="text-4xl font-extrabold text-gray-900 tracking-tight">
+
+                    {{ $this->name }}
+
+                </h1>
+
+
+                <!-- Manufacturer -->
+
+                <p class="mt-3 text-gray-500">
+
+                    Fabrikant:
+
+                    <span class="font-semibold text-gray-800">
+
+                        {{ $this->fabrikant?->name ?? 'Onbekend' }}
+
+                    </span>
+
+                </p>
+
+
+                <!-- Price -->
+
+                <div class="mt-8 pb-8 border-b border-gray-100">
+
+                    <p class="text-sm text-gray-500 mb-1">
+                        Prijs per meter
+                    </p>
+
+                    <div class="flex items-end gap-2">
+
+                        <span class="text-4xl font-extrabold text-green-600">
+
+                            € {{ number_format($this->prijs, 2, ',', '.') }}
+
+                        </span>
+
+                        <span class="text-gray-500 mb-1">
+                            / meter
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Quick information -->
+
+                <div class="grid grid-cols-2 gap-4 mt-8">
+
+
+                    <!-- Kleur -->
+
+                    <div class="rounded-2xl bg-slate-50 p-5">
+
+                        <div class="flex items-center gap-3">
+
+                            <div class="w-10 h-10 rounded-xl bg-white
+                                flex items-center justify-center shadow-sm">
+
+                                🎨
+
+                            </div>
+
+                            <div>
+
+                                <p class="text-xs text-gray-500 uppercase font-semibold">
+                                    Kleur
+                                </p>
+
+                                <p class="font-bold text-gray-800 mt-1">
+                                    {{ $this->kleur }}
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Breedte -->
+
+                    <div class="rounded-2xl bg-slate-50 p-5">
+
+                        <div class="flex items-center gap-3">
+
+                            <div class="w-10 h-10 rounded-xl bg-white
+                                flex items-center justify-center shadow-sm">
+
+                                📏
+
+                            </div>
+
+                            <div>
+
+                                <p class="text-xs text-gray-500 uppercase font-semibold">
+                                    Breedte
+                                </p>
+
+                                <p class="font-bold text-gray-800 mt-1">
+                                    {{ $this->breed }} cm
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Voorraad -->
+
+                    <div class="rounded-2xl bg-slate-50 p-5">
+
+                        <div class="flex items-center gap-3">
+
+                            <div class="w-10 h-10 rounded-xl bg-white
+                                flex items-center justify-center shadow-sm">
+
+                                📦
+
+                            </div>
+
+                            <div>
+
+                                <p class="text-xs text-gray-500 uppercase font-semibold">
+                                    Voorraad
+                                </p>
+
+                                <p class="font-bold text-gray-800 mt-1">
+
+                                    {{ $this->vooraad }} meter
+
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Fabrikant -->
+
+                    <div class="rounded-2xl bg-slate-50 p-5">
+
+                        <div class="flex items-center gap-3">
+
+                            <div class="w-10 h-10 rounded-xl bg-white
+                                flex items-center justify-center shadow-sm">
+
+                                🏭
+
+                            </div>
+
+                            <div>
+
+                                <p class="text-xs text-gray-500 uppercase font-semibold">
+                                    Fabrikant
+                                </p>
+
+                                <p class="font-bold text-gray-800 mt-1">
+                                    {{ $this->fabrikant?->name ?? '-' }}
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Buttons -->
+
+                <div class="flex flex-wrap gap-3 mt-8">
+
+                    <a
+                        href="/edit/{{ $this->id }}"
+                        class="flex-1 min-w-[180px] text-center
+                        bg-blue-600 hover:bg-blue-700
+                        text-white font-semibold
+                        px-6 py-3.5 rounded-xl
+                        shadow-sm transition">
+
+                        ✏️ Stof bewerken
+
+                    </a>
+
+
+                    <a
+                        href="/stoffen"
+                        class="flex-1 min-w-[180px] text-center
+                        bg-gray-100 hover:bg-gray-200
+                        text-gray-800 font-semibold
+                        px-6 py-3.5 rounded-xl
+                        transition">
+
+                        ← Terug naar stoffen
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- DESCRIPTION -->
+
+        <div class="grid lg:grid-cols-3 gap-8 mt-8">
+
+
+            <!-- Description -->
+
+            <div class="lg:col-span-2 bg-white rounded-3xl
+                shadow-sm border border-gray-100 p-8">
+
+                <div class="flex items-center gap-3 mb-6">
+
+                    <div class="w-11 h-11 rounded-xl
+                        bg-green-100 text-green-600
+                        flex items-center justify-center text-xl">
+
+                        📝
+
+                    </div>
+
+                    <div>
+
+                        <h2 class="text-2xl font-bold text-gray-900">
+                            Omschrijving
+                        </h2>
+
+                        <p class="text-sm text-gray-500">
+                            Informatie over deze stof
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="text-gray-600 leading-8 text-base">
+
+                    @if($this->omschrijving)
+
+                        {{ $this->omschrijving }}
+
+                    @else
+
+                        <p class="text-gray-400 italic">
+                            Er is nog geen omschrijving toegevoegd.
+                        </p>
+
+                    @endif
+
+                </div>
+
+            </div>
+
+
+            <!-- Summary -->
+
+            <div class="bg-white rounded-3xl
+                shadow-sm border border-gray-100 p-8">
+
+                <h2 class="text-xl font-bold text-gray-900 mb-6">
+                    Samenvatting
+                </h2>
+
+
+                <div class="space-y-5">
+
+
+                    <div class="flex justify-between gap-4">
+
+                        <span class="text-gray-500">
+                            Naam
+                        </span>
+
+                        <span class="font-semibold text-gray-800 text-right">
+                            {{ $this->name }}
+                        </span>
+
+                    </div>
+
+
+                    <div class="border-t"></div>
+
+
+                    <div class="flex justify-between gap-4">
+
+                        <span class="text-gray-500">
+                            Categorie
+                        </span>
+
+                        <span class="font-semibold text-gray-800">
+                            {{ $this->categorie }}
+                        </span>
+
+                    </div>
+
+
+                    <div class="border-t"></div>
+
+
+                    <div class="flex justify-between gap-4">
+
+                        <span class="text-gray-500">
+                            Kleur
+                        </span>
+
+                        <span class="font-semibold text-gray-800">
+                            {{ $this->kleur }}
+                        </span>
+
+                    </div>
+
+
+                    <div class="border-t"></div>
+
+
+                    <div class="flex justify-between gap-4">
+
+                        <span class="text-gray-500">
+                            Breedte
+                        </span>
+
+                        <span class="font-semibold text-gray-800">
+                            {{ $this->breed }} cm
+                        </span>
+
+                    </div>
+
+
+                    <div class="border-t"></div>
+
+
+                    <div class="flex justify-between gap-4">
+
+                        <span class="text-gray-500">
+                            Voorraad
+                        </span>
+
+                        <span class="font-bold text-green-600">
+                            {{ $this->vooraad }} meter
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- STATUS HISTORY -->
+
+        <div class="bg-white rounded-3xl
+            shadow-sm border border-gray-100
+            p-8 mt-8">
+
+            <div class="flex items-center gap-3 mb-8">
+
+                <div class="w-11 h-11 rounded-xl
+                    bg-blue-100 text-blue-600
+                    flex items-center justify-center text-xl">
+
+                    🕒
+
+                </div>
+
+                <div>
+
+                    <h2 class="text-2xl font-bold text-gray-900">
+                        Status geschiedenis
+                    </h2>
+
+                    <p class="text-gray-500 text-sm">
+                        Overzicht van alle statuswijzigingen
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="relative">
+
+                @forelse($this->stof->statusHistory->sortByDesc('created_at') as $history)
+
+                    <div class="flex gap-5 relative">
+
+
+                        <!-- Timeline -->
+
+                        <div class="flex flex-col items-center">
+
+                            <div class="w-4 h-4 rounded-full
+                                bg-green-500
+                                ring-4 ring-green-100
+                                shrink-0">
+                            </div>
+
+
+                            @if(!$loop->last)
+
+                                <div class="w-0.5 flex-1 bg-gray-200 my-2"></div>
+
+                            @endif
+
+                        </div>
+
+
+                        <!-- Content -->
+
+                        <div class="pb-8 flex-1">
+
+                            <div class="flex flex-wrap items-center justify-between gap-3">
+
+                                <span class="inline-flex items-center
+                                    bg-green-50 text-green-700
+                                    px-3 py-1 rounded-full
+                                    text-sm font-semibold">
+
+                                    {{ ucfirst($history->status) }}
+
+                                </span>
+
+
+                                <span class="text-sm text-gray-400">
+
+                                    {{ $history->created_at->format('d-m-Y H:i') }}
+
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                @empty
+
+                    <div class="text-center py-10">
+
+                        <div class="text-4xl mb-3">
+                            🕒
+                        </div>
+
+                        <p class="text-gray-500">
+                            Er is nog geen statusgeschiedenis.
+                        </p>
+
+                    </div>
+
+                @endforelse
+
+            </div>
+
+        </div>
+
+    </div>
+
 </div>
+```

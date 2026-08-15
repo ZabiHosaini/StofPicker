@@ -10,8 +10,6 @@ new class extends Component
 {
     use WithPagination;
 
-    public $indexPage = true;
-    public $createPage = false;
 
     public $searchText;
 
@@ -73,136 +71,655 @@ new class extends Component
         unset($this->stoffen); 
     }
 
-    public function OpenCreateForm()
+    /* public function OpenCreateForm()
     { 
         $this->indexPage = false;
         $this->createPage = true;
-    }
+    } */
+
+    #[On('stofCreated')]
+    public function stofCreated()
+        {
+            unset($this->stoffen);
+        }
+
 };
 ?>
 
 
 
     
-<div class="w-full max-w-8xl mx-2 bg-gray-100">  @session("success")
-     
-    <div x-data="{show:true}"  wire:key="flash-message"
-          x-init="setTimeout(() =>  show = false, 2500)" x-show = "show"                 
-          class="fixed top-5 right-5 z-50
-          bg-teal-100 border-t-4 border-teal-500 rounded-b
-          text-teal-900 px-4 py-3 shadow-md" role="alert">
-        <div class="flex">
-          <div class="py-1"><svg class="fill-current h-6 w-6 text-teal-500 mr-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M2.93 17.07A10 10 0 1 1 17.07 2.93 10 10 0 0 1 2.93 17.07zm12.73-1.41A8 8 0 1 0 4.34 4.34a8 8 0 0 0 11.32 11.32zM9 11V9h2v6H9v-4zm0-6h2v2H9V5z"/></svg></div>
-          <div>
-          <p class="font-bold">{{ $value }}</p>
-            <p class="text-sm">{{ $value }}</p>
-          </div>
-        </div>
-     </div>
-   
-   @endsession
-        @if ($indexPage)
-        <div class="flex justify-between p-8 items-center mt-4">
-            <div class="flex space-x-6">
-            <h1 class="text-3xl font-bold text-slate-900 mb-1 md:text-4xl dark:text-slate-50">StoffenLijst</h1>
-            <input wire:model.live="searchText" type="text" class="rounded shadow border border-1 focus-within:outline-bg-gray-50  placeholder-gray w-72 px-3 py-1" placeholder="Zoeken naar Stof....">
-            </div>
-            <div>
-            <a href="/create" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md">
-                + Toevoegen
-            </a>
-            </div>
-            
-        </div>
-        <div class="p-8 mt-0">
 
-                <div class="overflow-x-auto bg-white shadow rounded-lg">
-                    <table class="min-w-full text-sm text-left text-gray-700">
-                
-                    <!-- Header -->
-                    <thead class="bg-gray-200 text-gray-700 uppercase text-xs">
-                        <tr>
-                        <th class="px-6 py-3"></th>
-                        <th class="px-6 py-3">
-                            @if ($this->sortDirection==='asc')
-                              <a class="text-gray-700 hover:text-gray-900 hover:underline" href="#" wire:click.prevent="sortBy('name')">Naam(a-z)</a>
-                            @else
-                              <a class="text-gray-700 hover:text-gray-900 hover:underline" href="#" wire:click.prevent="sortBy('name')">Naam(z-a)</a>
-                            @endif
-                            
-                        </th>
-                        <th class="px-6 py-3 text-gray-700 hover:text-gray-900 hover:underline">Fabrikant</th>
-                        <th class="px-6 py-3 text-gray-700 hover:text-gray-900 hover:underline">Categorie</th>
-                        <th class="px-6 py-3 text-gray-700 hover:text-gray-900 hover:underline">Prijs</th>
-                        <th class="px-6 py-3 text-gray-700 hover:text-gray-900 hover:underline">Actie</th>
-                        </tr>
-                    </thead>
-                
-                    <!-- Body -->
-                    <tbody>
-                        @foreach ($this->stoffen as $stof )
-                        <tr class="border-b hover:bg-gray-50">
-                        
-                        <td class="px-6 py-4"><img class="rounded-full" src="{{asset('storage/'.$stof->foto) }}" width="80" alt=""></td>
-                        <td class="px-6 py-4"><a class="text-blue-600 hover:underline" href="/show/{{$stof->id}}">{{ $stof->name}}</a>  </td>
-                        <td class="px-6 py-4">{{ $stof->fabrikant?->name}}</td>
-                        <td class="px-6 py-4">{{ $stof->categorie}}</td>
-                        <td class="px-6 py-4">{{ $stof->prijs}}$</td>
-                        
+<div class="min-h-screen bg-gray-50">
 
-                        <td class="flex px-6 py-4">
-                        <a href="/edit/{{$stof->id}}"  Wire:key="{{ $stof->id }}" class="text-blue-600 hover:underline"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
-                                <path d="M21.731 2.269a2.625 2.625 0 0 0-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 0 0 0-3.712ZM19.513 8.199l-3.712-3.712-8.4 8.4a5.25 5.25 0 0 0-1.32 2.214l-.8 2.685a.75.75 0 0 0 .933.933l2.685-.8a5.25 5.25 0 0 0 2.214-1.32l8.4-8.4Z" />
-                                <path d="M5.25 5.25a3 3 0 0 0-3 3v10.5a3 3 0 0 0 3 3h10.5a3 3 0 0 0 3-3V13.5a.75.75 0 0 0-1.5 0v5.25a1.5 1.5 0 0 1-1.5 1.5H5.25a1.5 1.5 0 0 1-1.5-1.5V8.25a1.5 1.5 0 0 1 1.5-1.5h5.25a.75.75 0 0 0 0-1.5H5.25Z" />
-                            </svg>
-                            </a>
-                            <a wire:click="deleteStof({{ $stof->id }})"  Wire:key="{{ $stof->id }}" href="#" class="text-red-600 hover:underline ml-3"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-5">
-                                <path fill-rule="evenodd" d="M8.75 1A2.75 2.75 0 0 0 6 3.75v.443c-.795.077-1.584.176-2.365.298a.75.75 0 1 0 .23 1.482l.149-.022.841 10.518A2.75 2.75 0 0 0 7.596 19h4.807a2.75 2.75 0 0 0 2.742-2.53l.841-10.52.149.023a.75.75 0 0 0 .23-1.482A41.03 41.03 0 0 0 14 4.193V3.75A2.75 2.75 0 0 0 11.25 1h-2.5ZM10 4c.84 0 1.673.025 2.5.075V3.75c0-.69-.56-1.25-1.25-1.25h-2.5c-.69 0-1.25.56-1.25 1.25v.325C8.327 4.025 9.16 4 10 4ZM8.58 7.72a.75.75 0 0 0-1.5.06l.3 7.5a.75.75 0 1 0 1.5-.06l-.3-7.5Zm4.34.06a.75.75 0 1 0-1.5-.06l-.3 7.5a.75.75 0 1 0 1.5.06l.3-7.5Z" clip-rule="evenodd" />
-                            </svg>
-                            </a>
-                        </td>
-                        </tr>
-                        @endforeach   
-                    </tbody>
-                    </table>
+    {{-- Flash message --}}
+    @session('success')
+        <div
+            x-data="{ show: true }"
+            x-init="setTimeout(() => show = false, 2500)"
+            x-show="show"
+            x-transition
+            class="fixed top-5 right-5 z-50 bg-white border-l-4 border-green-500 rounded-xl shadow-xl px-5 py-4"
+        >
+            <div class="flex items-center gap-3">
+
+                <div class="flex h-10 w-10 items-center justify-center rounded-full bg-green-100">
+                    <span class="text-green-600 text-xl">✓</span>
                 </div>
 
-        </div><!-- end Main table -->
-        {{ $this->stoffen->links() }}
-        @endif
-        @if ($createPage)
-            @include('stof.create')
-        @endif
+                <div>
+                    <p class="font-semibold text-gray-800">
+                        Succes
+                    </p>
+
+                    <p class="text-sm text-gray-500">
+                        {{ $value }}
+                    </p>
+                </div>
+
+            </div>
+        </div>
+    @endsession
+
+
+    <div class="max-w-[1800px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        {{-- ================= HEADER ================= --}}
+        <div class="bg-white rounded-3xl shadow-sm border border-gray-100 p-6 sm:p-8 mb-6">
+
+            <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+
+                <div>
+                    <div class="flex items-center gap-3">
+
+                        <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-green-100">
+                            <span class="text-2xl">🧵</span>
+                        </div>
+
+                        <div>
+                            <h1 class="text-3xl font-bold text-gray-800">
+                                Stoffen
+                            </h1>
+
+                            <p class="text-gray-500 mt-1">
+                                Beheer je stoffen, prijzen, voorraad en fabrikanten.
+                            </p>
+                        </div>
+
+                    </div>
+                </div>
+
+
+                <a
+                    href="/create"
+                    class="inline-flex items-center justify-center gap-2
+                           bg-green-600 hover:bg-green-700
+                           text-white font-semibold
+                           px-6 py-3 rounded-xl
+                           shadow-sm hover:shadow-md transition"
+                >
+                    <span class="text-xl">+</span>
+                    Nieuwe stof
+                </a>
+
+            </div>
+
+
+            {{-- Search --}}
+            <div class="mt-8">
+
+                <div class="relative w-full lg:max-w-xl">
+
+                    <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
+
+                        <svg
+                            class="w-5 h-5 text-gray-400"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="m21 21-4.35-4.35m1.35-5.65a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z"
+                            />
+                        </svg>
+
+                    </div>
+
+
+                    <input
+                        wire:model.live="searchText"
+                        type="text"
+                        placeholder="Zoeken naar stof..."
+                        class="w-full rounded-2xl
+                               border border-gray-200
+                               bg-gray-50
+                               pl-12 pr-4 py-3.5
+                               text-gray-700
+                               placeholder-gray-400
+                               outline-none
+                               focus:bg-white
+                               focus:border-green-400
+                               focus:ring-4
+                               focus:ring-green-100
+                               transition"
+                    />
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        {{-- ================= TABLE ================= --}}
+        <div class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
+
+            {{-- Table header --}}
+            <div class="px-6 py-5 border-b border-gray-100 flex items-center justify-between">
+
+                <div>
+                    <h2 class="text-lg font-bold text-gray-800">
+                        Stoffen overzicht
+                    </h2>
+
+                    <p class="text-sm text-gray-500 mt-1">
+                        Bekijk en beheer alle stoffen.
+                    </p>
+                </div>
+
+            </div>
+
+
+            <div class="overflow-x-auto">
+
+                <table class="min-w-full">
+
+                    <thead class="bg-gray-50 border-b border-gray-100">
+
+                        <tr class="text-xs font-semibold uppercase tracking-wider text-gray-500">
+
+                            <th class="px-6 py-4 text-left">
+                                Foto
+                            </th>
+
+                            <th class="px-6 py-4 text-left">
+
+                                <button
+                                    wire:click="sortBy('name')"
+                                    class="flex items-center gap-2 hover:text-green-600 transition"
+                                >
+                                    Naam
+
+                                    @if($sortField === 'name')
+                                        <span class="text-green-600">
+                                            {{ $sortDirection === 'asc' ? '↑' : '↓' }}
+                                        </span>
+                                    @endif
+
+                                </button>
+
+                            </th>
+
+                            <th class="px-6 py-4 text-left">
+                                Fabrikant
+                            </th>
+
+                            <th class="px-6 py-4 text-left">
+                                Categorie
+                            </th>
+
+                            <th class="px-6 py-4 text-left">
+                                Prijs
+                            </th>
+
+                            <th class="px-6 py-4 text-left">
+                                Kleur
+                            </th>
+
+                            <th class="px-6 py-4 text-left">
+                                Voorraad
+                            </th>
+
+                            <th class="px-6 py-4 text-left">
+                                Breedte
+                            </th>
+
+                            <th class="px-6 py-4 text-left">
+                                Status
+                            </th>
+
+                            <th class="px-6 py-4 text-center">
+                                Actie
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody class="divide-y divide-gray-100">
+
+                        @forelse($this->stoffen as $stof)
+
+                            <tr class="group hover:bg-gray-50/80 transition duration-200">
+
+                                {{-- Foto --}}
+                                <td class="px-6 py-5">
+
+                                    <a href="/show/{{ $stof->id }}">
+
+                                        <div class="relative w-16 h-16">
+
+                                            <img
+                                                src="{{ asset('storage/' . $stof->foto) }}"
+                                                alt="{{ $stof->name }}"
+                                                class="w-16 h-16 rounded-2xl
+                                                       object-cover shadow-sm
+                                                       ring-1 ring-gray-200
+                                                       group-hover:ring-green-300
+                                                       transition"
+                                            >
+
+                                        </div>
+
+                                    </a>
+
+                                </td>
+
+
+                                {{-- Naam --}}
+                                <td class="px-6 py-5">
+
+                                    <a
+                                        href="/show/{{ $stof->id }}"
+                                        class="font-bold text-gray-800 hover:text-green-600 transition"
+                                    >
+                                        {{ $stof->name }}
+                                    </a>
+
+                                    <p class="text-xs text-gray-400 mt-1">
+                                        #{{ $stof->id }}
+                                    </p>
+
+                                </td>
+
+
+                                {{-- Fabrikant --}}
+                                <td class="px-6 py-5">
+
+                                    <div class="flex items-center gap-3">
+
+                                        <div class="w-9 h-9 rounded-xl bg-gray-100 flex items-center justify-center">
+                                            <span class="text-gray-500 text-sm">
+                                                🏭
+                                            </span>
+                                        </div>
+
+                                        <span class="text-gray-700 font-medium">
+                                            {{ $stof->fabrikant?->name ?? 'Onbekend' }}
+                                        </span>
+
+                                    </div>
+
+                                </td>
+
+
+                                {{-- Categorie --}}
+                                <td class="px-6 py-5">
+
+                                    <span
+                                        class="inline-flex items-center
+                                               bg-purple-50 text-purple-700
+                                               border border-purple-100
+                                               px-3 py-1.5
+                                               rounded-full
+                                               text-sm font-semibold"
+                                    >
+                                        {{ $stof->categorie }}
+                                    </span>
+
+                                </td>
+
+
+                                {{-- Prijs --}}
+                                <td class="px-6 py-5">
+
+                                    <div class="font-bold text-green-600 text-base">
+                                        € {{ number_format($stof->prijs, 2, ',', '.') }}
+                                    </div>
+
+                                    <div class="text-xs text-gray-400">
+                                        per meter
+                                    </div>
+
+                                </td>
+
+
+                                {{-- Kleur --}}
+                                <td class="px-6 py-5">
+                                    <div class="flex items-center gap-2">
+                                
+                                        <span
+                                            class="w-5 h-5 rounded-full ring-2 ring-white shadow"
+                                            style="background-color: {{ $stof->kleur }}"
+                                        ></span>
+                                
+                                        <span class="text-gray-700">
+                                            {{ $stof->kleur }}
+                                        </span>
+                                
+                                    </div>
+                                </td>
+
+
+                                {{-- Voorraad --}}
+                                <td class="px-6 py-5">
+
+                                    @if($stof->vooraad > 0)
+
+                                        <div>
+
+                                            <span class="font-bold text-gray-800">
+                                                {{ $stof->vooraad }}
+                                            </span>
+
+                                            <span class="text-gray-400 text-sm">
+                                                meter
+                                            </span>
+
+                                        </div>
+
+
+                                        @if($stof->vooraad < 10)
+
+                                            <span class="text-xs text-orange-500 font-medium">
+                                                Lage voorraad
+                                            </span>
+
+                                        @else
+
+                                            <span class="text-xs text-green-500 font-medium">
+                                                Op voorraad
+                                            </span>
+
+                                        @endif
+
+                                    @else
+
+                                        <span class="text-red-500 font-semibold text-sm">
+                                            Uitverkocht
+                                        </span>
+
+                                    @endif
+
+                                </td>
+
+
+                                {{-- Breedte --}}
+                                <td class="px-6 py-5">
+
+                                    <span class="font-semibold text-gray-700">
+                                        {{ $stof->breed }}
+                                    </span>
+
+                                    <span class="text-gray-400 text-sm">
+                                        cm
+                                    </span>
+
+                                </td>
+
+
+                                {{-- Status --}}
+                                <td class="px-6 py-5">
+
+                                    @switch($stof->status)
+
+                                        @case('besteld')
+
+                                            <span
+                                                class="inline-flex items-center gap-2
+                                                       bg-yellow-50 text-yellow-700
+                                                       border border-yellow-100
+                                                       px-3 py-1.5
+                                                       rounded-full
+                                                       text-sm font-semibold"
+                                            >
+                                                <span>🛒</span>
+                                                Besteld
+                                            </span>
+
+                                            @break
+
+
+                                        @case('onderweg')
+
+                                            <span
+                                                class="inline-flex items-center gap-2
+                                                       bg-blue-50 text-blue-700
+                                                       border border-blue-100
+                                                       px-3 py-1.5
+                                                       rounded-full
+                                                       text-sm font-semibold"
+                                            >
+                                                <span>🚚</span>
+                                                Onderweg
+                                            </span>
+
+                                            @break
+
+
+                                        @case('binnen')
+
+                                            <span
+                                                class="inline-flex items-center gap-2
+                                                       bg-green-50 text-green-700
+                                                       border border-green-100
+                                                       px-3 py-1.5
+                                                       rounded-full
+                                                       text-sm font-semibold"
+                                            >
+                                                <span>✓</span>
+                                                Binnen
+                                            </span>
+
+                                            @break
+
+
+                                        @case('geannuleerd')
+
+                                            <span
+                                                class="inline-flex items-center gap-2
+                                                       bg-red-50 text-red-700
+                                                       border border-red-100
+                                                       px-3 py-1.5
+                                                       rounded-full
+                                                       text-sm font-semibold"
+                                            >
+                                                <span>✕</span>
+                                                Geannuleerd
+                                            </span>
+
+                                            @break
+
+
+                                        @default
+
+                                            <span
+                                                class="inline-flex items-center
+                                                       bg-gray-100 text-gray-600
+                                                       px-3 py-1.5
+                                                       rounded-full
+                                                       text-sm font-semibold"
+                                            >
+                                                Onbekend
+                                            </span>
+
+                                    @endswitch
+
+                                </td>
+
+
+                                {{-- Acties --}}
+                                <td class="px-6 py-5">
+
+                                    <div class="flex justify-center gap-2">
+
+                                        {{-- Bekijken --}}
+                                        <a
+                                            href="/show/{{ $stof->id }}"
+                                            title="Bekijken"
+                                            class="w-10 h-10
+                                                   flex items-center justify-center
+                                                   rounded-xl
+                                                   bg-gray-100 text-gray-600
+                                                   hover:bg-gray-200
+                                                   transition"
+                                        >
+                                            👁️
+                                        </a>
+
+
+                                        {{-- Bewerken --}}
+                                        <a
+                                            href="/edit/{{ $stof->id }}"
+                                            title="Bewerken"
+                                            class="w-10 h-10
+                                                   flex items-center justify-center
+                                                   rounded-xl
+                                                   bg-blue-50 text-blue-600
+                                                   hover:bg-blue-100
+                                                   transition"
+                                        >
+                                            ✏️
+                                        </a>
+
+
+                                        {{-- Verwijderen --}}
+                                        <button
+                                            wire:click="deleteStof({{ $stof->id }})"
+                                            title="Verwijderen"
+                                            class="w-10 h-10
+                                                   flex items-center justify-center
+                                                   rounded-xl
+                                                   bg-red-50 text-red-600
+                                                   hover:bg-red-100
+                                                   transition"
+                                        >
+                                            🗑️
+                                        </button>
+
+                                    </div>
+
+                                </td>
+
+                            </tr>
+
+                        @empty
+
+                            <tr>
+
+                                <td colspan="10" class="px-6 py-16 text-center">
+
+                                    <div class="flex flex-col items-center">
+
+                                        <div
+                                            class="w-16 h-16 rounded-2xl
+                                                   bg-gray-100
+                                                   flex items-center justify-center
+                                                   mb-4"
+                                        >
+                                            <span class="text-3xl">
+                                                🧵
+                                            </span>
+                                        </div>
+
+                                        <h3 class="text-lg font-bold text-gray-800">
+                                            Geen stoffen gevonden
+                                        </h3>
+
+                                        <p class="text-gray-500 mt-1">
+                                            Probeer een andere zoekterm.
+                                        </p>
+
+                                    </div>
+
+                                </td>
+
+                            </tr>
+
+                        @endforelse
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+
+        {{-- Pagination --}}
+        <div class="mt-6">
+            {{ $this->stoffen->links() }}
+        </div>
+
     </div>
-    
-    @script
-     <script>
-       $wire.on("confirm", (event) => {
-         
+
+</div>
+
+
+@script
+
+<script>
+
+    $wire.on("confirm", (event) => {
+
         Swal.fire({
-        title: "Are you sure?",
-        text: "You won't be able to revert this!",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Yes, delete it!"
+            title: "Stof verwijderen?",
+            text: "Deze actie kan niet ongedaan worden.",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#16a34a",
+            cancelButtonColor: "#dc2626",
+            confirmButtonText: "Ja, verwijderen",
+            cancelButtonText: "Annuleren"
         }).then((result) => {
-        if (result.isConfirmed)
-          {
-            $wire.dispatch("delete", { id: event.id });
 
-            Swal.fire({
-            title: "Deleted!",
-            text: "Your file has been deleted.",
-            icon: "success"
-            });
+            if (result.isConfirmed) {
 
-          }
+                $wire.dispatch("delete", {
+                    id: event.id
+                });
+
+                Swal.fire({
+                    title: "Verwijderd!",
+                    text: "De stof is succesvol verwijderd.",
+                    icon: "success",
+                    confirmButtonColor: "#16a34a"
+                });
+
+            }
+
         });
-       });
-     </script>
 
-    @endscript
+    });
+
+
+    window.Echo.channel('stofs')
+        .listen('.create', (e) => {
+
+            console.log('Nieuwe stof:', e);
+
+            Livewire.dispatch('stofCreated');
+
+        });
+
+</script>
+
+@endscript
+
 
     

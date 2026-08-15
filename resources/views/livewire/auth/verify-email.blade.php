@@ -30,7 +30,7 @@ new #[Layout('components.layouts.auth')] class extends Component {
     {
         $logout();
 
-        $this->redirect('/', navigate: true);
+        $this->redirect('/shop', navigate: true);
     }
 }; ?>
 

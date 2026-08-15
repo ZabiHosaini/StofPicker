@@ -1,191 +1,643 @@
+
 <?php
 
 use Livewire\Component;
-use App\models\Fabrikant;
+use App\Models\Fabrikant;
 use Livewire\Attributes\Computed;
 use Livewire\WithPagination;
-use Livewire\Attributes\on;
-
+use Livewire\Attributes\On;
 
 new class extends Component
 {
     use WithPagination;
 
-    public $searchText;
+    public $searchText = '';
 
     public $sortField = 'created_at';
-    public $sortDirection = 'asc';
-
+    public $sortDirection = 'desc';
 
     public function toggle()
     {
-        $this->sortDirection = $this->sortDirection === 'desc' ? 'asc' : 'desc' ;    
+        $this->sortDirection = $this->sortDirection === 'desc'
+            ? 'asc'
+            : 'desc';
     }
 
     public function sortBy($field)
-    { 
-       if($this->sortField===$field)
-        {
-           $this->toggle();
-           return;
+    {
+        if ($this->sortField === $field) {
+            $this->toggle();
+            return;
         }
-        $this->sortField = $field;
-        
-        $this->resetPage();
 
+        $this->sortField = $field;
+        $this->sortDirection = 'asc';
+
+        $this->resetPage();
     }
-    
+
+    public function updatedSearchText()
+    {
+        $this->resetPage();
+    }
+
     #[Computed]
     public function fabrikanten()
     {
-        return Fabrikant::when($this->searchText,function($q){
-          
-            $q->where('name','like','%'. $this->searchText .'%');
-         
-        })
-        ->orderBy($this->sortField,$this->sortDirection)
-        ->paginate(5);
-        
+        return Fabrikant::query()
+            ->when($this->searchText, function ($q) {
+                $q->where(function ($query) {
+                    $query
+                        ->where('name', 'like', '%' . $this->searchText . '%')
+                        ->orWhere('adres', 'like', '%' . $this->searchText . '%')
+                        ->orWhere('email', 'like', '%' . $this->searchText . '%')
+                        ->orWhere('contactPersoon', 'like', '%' . $this->searchText . '%');
+                });
+            })
+            ->orderBy($this->sortField, $this->sortDirection)
+            ->paginate(5);
     }
 
     public function confirmDelete($id)
     {
-        $this->dispatch("confirm", id:$id);
+        $this->dispatch('confirm', id: $id);
     }
-    
+
     #[On('delete')]
     public function delete($id)
     {
-        Fabrikant::find($id)->delete();
+        $fabrikant = Fabrikant::find($id);
 
-        $this->fabrikanten =  Fabrikant::latest()->get();
+        if ($fabrikant) {
+            $fabrikant->delete();
 
-        unset($this->fabrikanten); 
+            session()->flash(
+                'success',
+                'De fabrikant is succesvol verwijderd.'
+            );
+        }
+
+        unset($this->fabrikanten);
     }
 
+    #[On('fabrikantCreated')]
+    public function fabrikantCreated()
+    {
+        unset($this->fabrikanten);
+    }
 };
 ?>
 
+<div class="min-h-screen bg-gray-50">
 
-    <div class=" w-full h-full bg-gray-100 ">
-@session("success")
-    
-<div x-data="{show:true}"  wire:key="flash-message"
-        x-init="setTimeout(() =>  show = false, 2500)" x-show = "show"                 
-        class="fixed top-5 right-5 z-50
-        bg-teal-100 border-t-4 border-teal-500 rounded-b
-        text-teal-900 px-4 py-3 shadow-md" role="alert">
-    <div class="flex">
-        <div class="py-1"><svg class="fill-current h-6 w-6 text-teal-500 mr-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M2.93 17.07A10 10 0 1 1 17.07 2.93 10 10 0 0 1 2.93 17.07zm12.73-1.41A8 8 0 1 0 4.34 4.34a8 8 0 0 0 11.32 11.32zM9 11V9h2v6H9v-4zm0-6h2v2H9V5z"/></svg></div>
-        <div>
-        <p class="font-bold">{{ $value }}</p>
-        <p class="text-sm">{{ $value }}</p>
-        </div>
-    </div>
-</div>
+    {{-- Flash message --}}
+    @session('success')
+        <div
+            x-data="{ show: true }"
+            x-init="setTimeout(() => show = false, 2500)"
+            x-show="show"
+            x-transition
+            class="fixed top-5 right-5 z-50 bg-white border-l-4 border-green-500 rounded-xl shadow-xl px-5 py-4"
+        >
+            <div class="flex items-center gap-3">
 
-@endsession
-       
-        <div class="flex justify-between p-8 items-center mt-4">
-            <div class="flex space-x-6">
-            <h1 class="text-3xl font-bold text-slate-900 mb-1 md:text-4xl dark:text-slate-50">Leveranciers</h1>
-            <input wire:model.live="searchText" type="text" class="rounded shadow border border-1 focus-within:outline-bg-gray-50  placeholder-gray w-72 px-3 py-1" placeholder="Zoeken naar Stof....">
-            </div>
-            <div>
-            <a href="fabrikant/create" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md">
-                + Toevoegen
-            </a>
-            </div>
-            
-        </div>
-        <div class="p-8 mt-0">
-
-                <div class="overflow-x-auto bg-white shadow rounded-lg">
-                    <table class="min-w-full text-sm text-left text-gray-700">
-                
-                    <!-- Header -->
-                    <thead class="bg-gray-200 text-gray-700 uppercase text-xs">
-                        <tr>
-                        <th class="px-6 py-3"></th>
-                        <th class="px-6 py-3">
-                            @if ($this->sortDirection==='asc')
-                              <a class="text-gray-700 hover:text-gray-900 hover:underline" href="#" wire:click.prevent="sortBy('name')">Naam(a-z)</a>
-                            @else
-                              <a class="text-gray-700 hover:text-gray-900 hover:underline" href="#" wire:click.prevent="sortBy('name')">Naam(z-a)</a>
-                            @endif
-                            
-                        </th>
-                        <th class="px-6 py-3 text-gray-700 hover:text-gray-900 hover:underline">Adres</th>
-                        <th class="px-6 py-3 text-gray-700 hover:text-gray-900 hover:underline">EmailAdres</th>
-                        <th class="px-6 py-3 text-gray-700 hover:text-gray-900 hover:underline">ContactPersoon</th>
-                        <th class="px-6 py-3 text-gray-700 hover:text-gray-900 hover:underline">Actie</th>
-                        </tr>
-                    </thead>
-                
-                    <!-- Body -->
-                    <tbody>
-                        @foreach ($this->fabrikanten as $fabrikant )
-                        <tr class="border-b hover:bg-gray-50">
-                        
-                        <td class="px-6 py-4"><img class="rounded-full" src="{{asset('storage/'.$fabrikant->logo) }}" width="80" alt=""></td>
-                        <td class="px-6 py-4"><a class="text-blue-600 hover:underline" href="/show/{{$fabrikant->id}}">{{ $fabrikant->name}}</a>  </td>
-                        <td class="px-6 py-4">{{ $fabrikant->adres}}</td>
-                        <td class="px-6 py-4">{{ $fabrikant->email}}</td>
-                        <td class="px-6 py-4">{{ $fabrikant->contactPersoon}}</td>
-
-                        <td class="flex px-6 py-4">
-                        <a href="/fabrikant/edit/{{$fabrikant->id}}"  Wire:key="{{ $fabrikant->id }}" class="text-blue-600 hover:underline"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
-                                <path d="M21.731 2.269a2.625 2.625 0 0 0-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 0 0 0-3.712ZM19.513 8.199l-3.712-3.712-8.4 8.4a5.25 5.25 0 0 0-1.32 2.214l-.8 2.685a.75.75 0 0 0 .933.933l2.685-.8a5.25 5.25 0 0 0 2.214-1.32l8.4-8.4Z" />
-                                <path d="M5.25 5.25a3 3 0 0 0-3 3v10.5a3 3 0 0 0 3 3h10.5a3 3 0 0 0 3-3V13.5a.75.75 0 0 0-1.5 0v5.25a1.5 1.5 0 0 1-1.5 1.5H5.25a1.5 1.5 0 0 1-1.5-1.5V8.25a1.5 1.5 0 0 1 1.5-1.5h5.25a.75.75 0 0 0 0-1.5H5.25Z" />
-                            </svg>
-                            </a>
-                            <a wire:click="confirmDelete({{ $fabrikant->id }})"  Wire:key="{{ $fabrikant->id }}" href="#" class="text-red-600 hover:underline ml-3"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-5">
-                                <path fill-rule="evenodd" d="M8.75 1A2.75 2.75 0 0 0 6 3.75v.443c-.795.077-1.584.176-2.365.298a.75.75 0 1 0 .23 1.482l.149-.022.841 10.518A2.75 2.75 0 0 0 7.596 19h4.807a2.75 2.75 0 0 0 2.742-2.53l.841-10.52.149.023a.75.75 0 0 0 .23-1.482A41.03 41.03 0 0 0 14 4.193V3.75A2.75 2.75 0 0 0 11.25 1h-2.5ZM10 4c.84 0 1.673.025 2.5.075V3.75c0-.69-.56-1.25-1.25-1.25h-2.5c-.69 0-1.25.56-1.25 1.25v.325C8.327 4.025 9.16 4 10 4ZM8.58 7.72a.75.75 0 0 0-1.5.06l.3 7.5a.75.75 0 1 0 1.5-.06l-.3-7.5Zm4.34.06a.75.75 0 1 0-1.5-.06l-.3 7.5a.75.75 0 1 0 1.5.06l.3-7.5Z" clip-rule="evenodd" />
-                            </svg>
-                            </a>
-                        </td>
-                        </tr>
-                        @endforeach   
-                    </tbody>
-                    </table>
+                <div class="flex h-10 w-10 items-center justify-center rounded-full bg-green-100">
+                    <span class="text-green-600 text-xl">✓</span>
                 </div>
 
-        </div><!-- end Main table -->
-        {{ $this->fabrikanten->links() }}
-      
+                <div>
+                    <p class="font-semibold text-gray-800">
+                        Succes
+                    </p>
+
+                    <p class="text-sm text-gray-500">
+                        {{ $value }}
+                    </p>
+                </div>
+
+            </div>
+        </div>
+    @endsession
+
+
+    <div class="max-w-[1800px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        {{-- ================= HEADER ================= --}}
+        <div class="bg-white rounded-3xl shadow-sm border border-gray-100 p-6 sm:p-8 mb-6">
+
+            <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+
+                <div>
+
+                    <div class="flex items-center gap-3">
+
+                        <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-green-100">
+                            <span class="text-2xl">🏭</span>
+                        </div>
+
+                        <div>
+                            <h1 class="text-3xl font-bold text-gray-800">
+                                Fabrikanten
+                            </h1>
+
+                            <p class="text-gray-500 mt-1">
+                                Beheer fabrikanten, contactgegevens en leveranciers.
+                            </p>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <a
+                    href="/fabrikant/create"
+                    class="inline-flex items-center justify-center gap-2
+                           bg-green-600 hover:bg-green-700
+                           text-white font-semibold
+                           px-6 py-3 rounded-xl
+                           shadow-sm hover:shadow-md
+                           transition"
+                >
+                    <span class="text-xl">+</span>
+                    Nieuwe fabrikant
+                </a>
+
+            </div>
+
+
+            {{-- Search --}}
+            <div class="mt-8">
+
+                <div class="relative w-full lg:max-w-xl">
+
+                    <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
+
+                        <svg
+                            class="w-5 h-5 text-gray-400"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="m21 21-4.35-4.35m1.35-5.65a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z"
+                            />
+                        </svg>
+
+                    </div>
+
+                    <input
+                        wire:model.live="searchText"
+                        type="text"
+                        placeholder="Zoeken naar fabrikant..."
+                        class="w-full rounded-2xl
+                               border border-gray-200
+                               bg-gray-50
+                               pl-12 pr-4 py-3.5
+                               text-gray-700
+                               placeholder-gray-400
+                               outline-none
+                               focus:bg-white
+                               focus:border-green-400
+                               focus:ring-4
+                               focus:ring-green-100
+                               transition"
+                    >
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        {{-- ================= TABLE ================= --}}
+        <div class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
+
+            {{-- Table header --}}
+            <div class="px-6 py-5 border-b border-gray-100">
+
+                <div>
+                    <h2 class="text-lg font-bold text-gray-800">
+                        Fabrikanten overzicht
+                    </h2>
+
+                    <p class="text-sm text-gray-500 mt-1">
+                        Bekijk en beheer alle fabrikanten.
+                    </p>
+                </div>
+
+            </div>
+
+
+            <div class="overflow-x-auto">
+
+                <table class="min-w-full">
+
+                    {{-- ================= THEAD ================= --}}
+                    <thead class="bg-gray-50 border-b border-gray-100">
+
+                        <tr class="text-xs font-semibold uppercase tracking-wider text-gray-500">
+
+                            <th class="px-6 py-4 text-left">
+                                Logo
+                            </th>
+
+                            <th class="px-6 py-4 text-left">
+
+                                <button
+                                    wire:click="sortBy('name')"
+                                    class="flex items-center gap-2 hover:text-green-600 transition"
+                                >
+                                    Naam
+
+                                    @if($sortField === 'name')
+                                        <span class="text-green-600">
+                                            {{ $sortDirection === 'asc' ? '↑' : '↓' }}
+                                        </span>
+                                    @endif
+                                </button>
+
+                            </th>
+
+                            <th class="px-6 py-4 text-left">
+                                Adres
+                            </th>
+
+                            <th class="px-6 py-4 text-left">
+                                Telefoon
+                            </th>
+
+                            <th class="px-6 py-4 text-left">
+                                E-mail
+                            </th>
+
+                            <th class="px-6 py-4 text-left">
+                                Contactpersoon
+                            </th>
+
+                            <th class="px-6 py-4 text-center">
+                                Acties
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    {{-- ================= TBODY ================= --}}
+                    <tbody class="divide-y divide-gray-100">
+
+                        @forelse($this->fabrikanten as $fabrikant)
+
+                            <tr class="group hover:bg-gray-50/80 transition duration-200">
+
+                                {{-- Logo --}}
+                                <td class="px-6 py-5">
+
+                                    <a href="/fabrikant/show/{{ $fabrikant->id }}">
+
+                                        @if($fabrikant->logo)
+
+                                            <img
+                                                src="{{ asset('storage/' . $fabrikant->logo) }}"
+                                                alt="{{ $fabrikant->name }}"
+                                                class="w-16 h-16 rounded-2xl object-cover
+                                                       shadow-sm ring-1 ring-gray-200
+                                                       group-hover:ring-green-300
+                                                       transition"
+                                            >
+
+                                        @else
+
+                                            <div
+                                                class="w-16 h-16 rounded-2xl
+                                                       bg-gray-100
+                                                       ring-1 ring-gray-200
+                                                       flex items-center justify-center
+                                                       group-hover:ring-green-300
+                                                       transition"
+                                            >
+                                                <span class="text-2xl">
+                                                    🏭
+                                                </span>
+                                            </div>
+
+                                        @endif
+
+                                    </a>
+
+                                </td>
+
+
+                                {{-- Naam --}}
+                                <td class="px-6 py-5">
+
+                                    <a
+                                        href="{{ route('fabrikant.show', $fabrikant->id) }}"
+                                        class="font-semibold text-blue-600 hover:underline"
+                                    >
+                                        {{ $fabrikant->name }}
+                                    </a>
+
+                                    <p class="text-xs text-gray-400 mt-1">
+                                        #{{ $fabrikant->id }}
+                                    </p>
+
+                                </td>
+
+
+                                {{-- Adres --}}
+                                <td class="px-6 py-5">
+
+                                    <div class="flex items-center gap-3">
+
+                                        <div
+                                            class="w-9 h-9 rounded-xl
+                                                   bg-gray-100
+                                                   flex items-center justify-center"
+                                        >
+                                            <span class="text-sm">
+                                                📍
+                                            </span>
+                                        </div>
+
+                                        <span class="text-gray-700">
+                                            {{ $fabrikant->adres ?: 'Geen adres' }}
+                                        </span>
+
+                                    </div>
+
+                                </td>
+
+
+                                {{-- Telefoon --}}
+                                <td class="px-6 py-5">
+
+                                    @if($fabrikant->telefoon)
+
+                                        <a
+                                            href="tel:{{ $fabrikant->telefoon }}"
+                                            class="inline-flex items-center gap-2
+                                                   text-gray-700
+                                                   hover:text-green-600
+                                                   transition"
+                                        >
+                                            <span>📞</span>
+
+                                            {{ $fabrikant->telefoon }}
+                                        </a>
+
+                                    @else
+
+                                        <span class="text-gray-400">
+                                            Geen telefoon
+                                        </span>
+
+                                    @endif
+
+                                </td>
+
+
+                                {{-- Email --}}
+                                <td class="px-6 py-5">
+
+                                    @if($fabrikant->email)
+
+                                        <a
+                                            href="mailto:{{ $fabrikant->email }}"
+                                            class="inline-flex items-center gap-2
+                                                   text-gray-700
+                                                   hover:text-green-600
+                                                   transition"
+                                        >
+                                            <span>✉️</span>
+
+                                            {{ $fabrikant->email }}
+                                        </a>
+
+                                    @else
+
+                                        <span class="text-gray-400">
+                                            Geen e-mail
+                                        </span>
+
+                                    @endif
+
+                                </td>
+
+
+                                {{-- Contactpersoon --}}
+                                <td class="px-6 py-5">
+
+                                    @if($fabrikant->contactPersoon)
+
+                                        <div class="flex items-center gap-3">
+
+                                            <div
+                                                class="w-9 h-9 rounded-full
+                                                       bg-green-100
+                                                       text-green-700
+                                                       flex items-center justify-center
+                                                       font-bold"
+                                            >
+                                                {{ strtoupper(substr($fabrikant->contactPersoon, 0, 1)) }}
+                                            </div>
+
+                                            <span class="font-medium text-gray-700">
+                                                {{ $fabrikant->contactPersoon }}
+                                            </span>
+
+                                        </div>
+
+                                    @else
+
+                                        <span class="text-gray-400">
+                                            Geen contactpersoon
+                                        </span>
+
+                                    @endif
+
+                                </td>
+
+
+                                {{-- Acties --}}
+                                <td class="px-6 py-5">
+
+                                    <div class="flex justify-center gap-2">
+
+                                        {{-- Bekijken --}}
+                                        <a
+                                            href="/fabrikant/show/{{ $fabrikant->id }}"
+                                            title="Bekijken"
+                                            class="w-10 h-10
+                                                   flex items-center justify-center
+                                                   rounded-xl
+                                                   bg-gray-100
+                                                   text-gray-600
+                                                   hover:bg-gray-200
+                                                   transition"
+                                        >
+                                            👁️
+                                        </a>
+
+
+                                        {{-- Bewerken --}}
+                                        <a
+                                            href="/fabrikant/edit/{{ $fabrikant->id }}"
+                                            title="Bewerken"
+                                            class="w-10 h-10
+                                                   flex items-center justify-center
+                                                   rounded-xl
+                                                   bg-blue-50
+                                                   text-blue-600
+                                                   hover:bg-blue-100
+                                                   transition"
+                                        >
+                                            ✏️
+                                        </a>
+
+
+                                        {{-- Verwijderen --}}
+                                        <button
+                                            wire:click="confirmDelete({{ $fabrikant->id }})"
+                                            title="Verwijderen"
+                                            class="w-10 h-10
+                                                   flex items-center justify-center
+                                                   rounded-xl
+                                                   bg-red-50
+                                                   text-red-600
+                                                   hover:bg-red-100
+                                                   transition"
+                                        >
+                                            🗑️
+                                        </button>
+
+                                    </div>
+
+                                </td>
+
+                            </tr>
+
+                        @empty
+
+                            <tr>
+
+                                <td colspan="7" class="px-6 py-16 text-center">
+
+                                    <div class="flex flex-col items-center">
+
+                                        <div
+                                            class="w-16 h-16 rounded-2xl
+                                                   bg-gray-100
+                                                   flex items-center justify-center
+                                                   mb-4"
+                                        >
+                                            <span class="text-3xl">
+                                                🏭
+                                            </span>
+                                        </div>
+
+                                        <h3 class="text-lg font-bold text-gray-800">
+                                            Geen fabrikanten gevonden
+                                        </h3>
+
+                                        <p class="text-gray-500 mt-1">
+                                            Probeer een andere zoekterm.
+                                        </p>
+
+                                    </div>
+
+                                </td>
+
+                            </tr>
+
+                        @endforelse
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+
+        {{-- Pagination --}}
+        <div class="mt-6">
+            {{ $this->fabrikanten->links() }}
+        </div>
+
     </div>
-    
-    @script
-     <script>
-       $wire.on("confirm", (event) => {
-         Swal.fire({
-        title: "Are you sure?",
-        text: "You won't be able to revert this!",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Yes, delete it!"
+
+</div>
+
+
+@script
+
+<script>
+
+    $wire.on("confirm", (event) => {
+
+        Swal.fire({
+
+            title: "Fabrikant verwijderen?",
+
+            text: "Deze actie kan niet ongedaan worden.",
+
+            icon: "warning",
+
+            showCancelButton: true,
+
+            confirmButtonColor: "#16a34a",
+
+            cancelButtonColor: "#dc2626",
+
+            confirmButtonText: "Ja, verwijderen",
+
+            cancelButtonText: "Annuleren"
+
         }).then((result) => {
-        if (result.isConfirmed)
-          {
-            $wire.dispatch("delete", { id: event.id });
 
-            Swal.fire({
-            title: "Deleted!",
-            text: "Your file has been deleted.",
-            icon: "success"
-            });
+            if (result.isConfirmed) {
 
-          }
-        
-        
-        
-          
-}); 
+                $wire.dispatch("delete", {
+                    id: event.id
+                });
 
-       });
+                Swal.fire({
 
-     </script>
- @endscript
-   
+                    title: "Verwijderd!",
+
+                    text: "De fabrikant is succesvol verwijderd.",
+
+                    icon: "success",
+
+                    confirmButtonColor: "#16a34a"
+
+                });
+
+            }
+
+        });
+
+    });
+
+
+    window.Echo.channel('fabrikants')
+
+        .listen('.create', (e) => {
+
+            console.log('Nieuwe fabrikant:', e);
+
+            Livewire.dispatch('fabrikantCreated');
+
+        });
+
+</script>
+
+@endscript
+

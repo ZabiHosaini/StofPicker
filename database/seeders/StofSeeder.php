@@ -23,11 +23,12 @@ class StofSeeder extends Seeder
         foreach (range(1,10) as $key => $value) {
             DB::table('stofs')->insert([
                 'name' => $faker->name,
-                'fabrikant' => $faker->company,
+                'fabrikant_id' => '1',
                 'categorie' => $faker->randomElement($categorie),
                 'prijs' => $faker->randomFloat(2, 10, 1000), // creates a float between 10 and 1000 with 2 decimals.
                 'kleur' => $faker->hexColor(),
                 'status' => 'onderweg',
+                'breed' => $faker->numberBetween(100, 200),
                 'vooraad' => $faker->numberBetween(0, 500),
                 'foto' => $faker->imageUrl(200,200),
                 'omschrijving' => $faker->text,    
