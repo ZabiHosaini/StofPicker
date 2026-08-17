@@ -23,29 +23,23 @@ new class extends Component
 
     public function send()
     {
-        $this->validate([
-            'name' => 'required|min:2',
-            'email' => 'required|email',
-            'message' => 'required|min:10',
-        ]);
+    $this->validate([
+        'name' => 'required',
+        'email' => 'required|email',
+        'message' => 'required',
+    ]);
 
-        Mail::raw(
-            "Nieuw contactbericht\n\n" .
-            "Naam: {$this->name}\n" .
-            "E-mail: {$this->email}\n" .
-            "Telefoon: {$this->phone}\n" .
-            "Bedrijf: {$this->company}\n\n" .
-            "Bericht:\n{$this->message}",
-            function ($mail) {
-                $mail->to('sayedzabi1987@gmail.com');
-                $mail->subject('Nieuw contactbericht - StofPicker');
-            }
-        );
+    Mail::to('sayedzabi1987@gmail.com')
+        ->send(new ContactMail([
+            'name' => $this->name,
+            'email' => $this->email,
+            'phone' => $this->phone,
+            'company' => $this->company,
+            'message' => $this->message,
+        ]));
 
-        session()->flash('success', 'Bericht verzonden!');
-
-        $this->reset();
-    }
+    session()->flash('success', 'Bericht verzonden!');
+}
 };
 ?>
 
