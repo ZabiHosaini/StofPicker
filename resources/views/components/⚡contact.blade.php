@@ -3,7 +3,7 @@
 use Livewire\Component;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ContactMail;
-
+use App\Mail\ContactConfirmationMail;
 
 new class extends Component
 {
