@@ -29,29 +29,25 @@ new class extends Component
         'message' => 'required',
     ]);
     
-    $data = [
+   /*  $data = [
     'name' => $this->name,
     'email' => $this->email,
     'phone' => $this->phone,
     'company' => $this->company,
-    'message' => $this->message,
+    'message' => $this->message, */
 /*     'reply' => 'Bedankt voor je bericht. Wij hebben je aanvraag goed ontvangen en nemen zo snel mogelijk contact met je op.',
- */];
+ *///];
 
 
     // Mail naar jou
-    Mail::raw(
-        "Nieuw contactbericht\n\n" .
-        "Naam: {$this->name}\n" .
-        "E-mail: {$this->email}\n" .
-        "Telefoon: {$this->phone}\n" .
-        "Bedrijf: {$this->company}\n\n" .
-        "Bericht:\n{$this->message}",
-        function ($mail) {
-            $mail->to('sayedzabi1987@gmail.com')
-                 ->subject('Nieuw contactbericht - StofPicker');
-        }
-    );
+    Mail::to('sayedzabi1987@gmail.com')
+    ->send(new ContactMail([
+        'name' => $this->name,
+        'email' => $this->email,
+        'phone' => $this->phone,
+        'company' => $this->company,
+        'message' => $this->message,
+    ]));
 
 
     // Bevestiging naar klant
