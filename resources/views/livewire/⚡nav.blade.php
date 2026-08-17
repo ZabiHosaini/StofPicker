@@ -49,7 +49,7 @@ new class extends Component
                             shadow-sm group-hover:shadow-md transition">
 
                     <img
-                        src="{{ asset('storage/fotos/fabric.jpg') }}"
+                        src="{{ asset('images/fabric.jpg') }}"
                         alt="Logo"
                         class="w-full h-full object-cover"
                     >
