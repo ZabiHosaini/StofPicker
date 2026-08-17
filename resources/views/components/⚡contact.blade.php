@@ -42,8 +42,8 @@ new class extends Component
             ->send(new ContactMail($data));
 
         // 2. Bevestiging naar de klant
-        Mail::to($this->email)
-            ->send(new ContactConfirmationMail($data));
+       /*  Mail::to($this->email)
+            ->send(new ContactConfirmationMail($data)); */
 
         session()->flash('success', 'Bericht verzonden! Je ontvangt ook een bevestiging per e-mail.');
     }
