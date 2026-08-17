@@ -30,14 +30,15 @@ new class extends Component
         ]);
 
         Mail::raw(
+            "Nieuw contactbericht\n\n" .
             "Naam: {$this->name}\n" .
-            "Email: {$this->email}\n" .
+            "E-mail: {$this->email}\n" .
             "Telefoon: {$this->phone}\n" .
-            "Bedrijf: {$this->company}\n" .
-            "Bericht: {$this->message}",
+            "Bedrijf: {$this->company}\n\n" .
+            "Bericht:\n{$this->message}",
             function ($mail) {
-                $mail->to('sayedzabi1987@gmail.com')
-                    ->subject('Nieuw contactbericht - StofPicker');
+                $mail->to('sayedzabi1987@gmail.com');
+                $mail->subject('Nieuw contactbericht - StofPicker');
             }
         );
 
