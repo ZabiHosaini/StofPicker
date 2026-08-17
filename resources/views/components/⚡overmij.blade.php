@@ -19,7 +19,7 @@ new class extends Component
                 {{-- Profielfoto / icoon --}}
                 <div class="flex-shrink-0">
                     <img
-                        src="{{ asset('storage/zabi.jpg') }}"
+                        src="{{ asset('images/zabi.jpg') }}"
                         alt=""
                         class="w-32 h-32 rounded-2xl object-cover
                                 shadow-sm ring-1 ring-gray-200
