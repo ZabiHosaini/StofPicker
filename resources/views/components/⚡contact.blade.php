@@ -2,7 +2,7 @@
 
 use Livewire\Component;
 use Illuminate\Support\Facades\Mail;
-//use App\Mail\ContactMail;
+use App\Mail\ContactMail;
 
 
 new class extends Component
@@ -21,25 +21,7 @@ new class extends Component
         'message' => 'required|min:10',
     ];
 
-    public function send()
-    {
-    $this->validate([
-        'name' => 'required',
-        'email' => 'required|email',
-        'message' => 'required',
-    ]);
-
-    Mail::to('sayedzabi1987@gmail.com')
-        ->send(new ContactMail([
-            'name' => $this->name,
-            'email' => $this->email,
-            'phone' => $this->phone,
-            'company' => $this->company,
-            'message' => $this->message,
-        ]));
-
-    session()->flash('success', 'Bericht verzonden!');
-}
+    public function send() { $this->validate([ 'name' => 'required|min:2', 'email' => 'required|email', 'message' => 'required|min:10', ]); try { Mail::to('sayedzabi1987@gmail.com')->send( new ContactMail([ 'name' => $this->name, 'email' => $this->email, 'phone' => $this->phone, 'company' => $this->company, 'message' => $this->message, ]) ); session()->flash('success', 'Bericht verzonden!'); } catch (\Throwable $e) { \Log::error('Contactformulier fout', [ 'error' => $e->getMessage(), 'file' => $e->getFile(), 'line' => $e->getLine(), ]); session()->flash( 'error', 'Er is een fout opgetreden bij het verzenden van het bericht.' ); } }
 };
 ?>
 
