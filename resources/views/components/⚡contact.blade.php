@@ -2,7 +2,7 @@
 
 use Livewire\Component;
 use Illuminate\Support\Facades\Mail;
-use App\Mail\ContactMail;
+//use App\Mail\ContactMail;
 
 
 new class extends Component
@@ -22,44 +22,27 @@ new class extends Component
     ];
 
     public function send()
-{
-    $this->validate([
-        'name' => 'required',
-        'email' => 'required|email',
-        'message' => 'required',
-    ]);
-    
-   /*  $data = [
-    'name' => $this->name,
-    'email' => $this->email,
-    'phone' => $this->phone,
-    'company' => $this->company,
-    'message' => $this->message, */
-/*     'reply' => 'Bedankt voor je bericht. Wij hebben je aanvraag goed ontvangen en nemen zo snel mogelijk contact met je op.',
- *///];
+    {
+        $this->validate([
+            'name' => 'required|min:2',
+            'email' => 'required|email',
+            'message' => 'required|min:10',
+        ]);
 
+        Mail::raw(
+            "Naam: {$this->name}\n" .
+            "Email: {$this->email}\n" .
+            "Telefoon: {$this->phone}\n" .
+            "Bedrijf: {$this->company}\n" .
+            "Bericht: {$this->message}",
+            function ($mail) {
+                $mail->to('sayedzabi1987@gmail.com')
+                    ->subject('Nieuw contactbericht - StofPicker');
+            }
+        );
 
-    // Mail naar jou
-    Mail::to('sayedzabi1987@gmail.com')
-    ->send(new ContactMail([
-        'name' => $this->name,
-        'email' => $this->email,
-        'phone' => $this->phone,
-        'company' => $this->company,
-        'message' => $this->message,
-    ]));
+        session()->flash('success', 'Bericht verzonden!');
 
-
-    // Bevestiging naar klant
-    /* Mail::to($this->email)
-        ->send(new ContactMail([
-            'name' => $this->name,
-            'email' => $this->email,
-
-             'reply' => 'Bedankt voor je bericht. Wij hebben je aanvraag goed ontvangen en nemen zo snel mogelijk contact met je op.',        ])); */
-
-
-             session()->flash('success', 'Bericht verzonden!');
         $this->reset();
     }
 };
