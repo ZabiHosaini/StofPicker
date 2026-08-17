@@ -21,7 +21,32 @@ new class extends Component
         'message' => 'required|min:10',
     ];
 
-    public function send() { $this->validate([ 'name' => 'required|min:2', 'email' => 'required|email', 'message' => 'required|min:10', ]); try { Mail::to('sayedzabi1987@gmail.com')->send( new ContactMail([ 'name' => $this->name, 'email' => $this->email, 'phone' => $this->phone, 'company' => $this->company, 'message' => $this->message, ]) ); session()->flash('success', 'Bericht verzonden!'); } catch (\Throwable $e) { \Log::error('Contactformulier fout', [ 'error' => $e->getMessage(), 'file' => $e->getFile(), 'line' => $e->getLine(), ]); session()->flash( 'error', 'Er is een fout opgetreden bij het verzenden van het bericht.' ); } }
+    public function send()
+    {
+        $this->validate([
+            'name' => 'required|min:2',
+            'email' => 'required|email',
+            'message' => 'required|min:10',
+        ]);
+
+        $data = [
+            'name' => $this->name,
+            'email' => $this->email,
+            'phone' => $this->phone,
+            'company' => $this->company,
+            'message' => $this->message,
+        ];
+
+        // 1. Mail naar jou
+        Mail::to('sayedzabi1987@gmail.com')
+            ->send(new ContactMail($data));
+
+        // 2. Bevestiging naar de klant
+        Mail::to($this->email)
+            ->send(new ContactConfirmationMail($data));
+
+        session()->flash('success', 'Bericht verzonden! Je ontvangt ook een bevestiging per e-mail.');
+    }
 };
 ?>
 
