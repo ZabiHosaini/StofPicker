@@ -63,8 +63,7 @@ new class extends Component
              'reply' => 'Bedankt voor je bericht. Wij hebben je aanvraag goed ontvangen en nemen zo snel mogelijk contact met je op.',        ])); */
 
 
-    session()->flash('success', 'Bericht verzonden! Je krijgt ook een bevestiging per email.');
-
+             session()->flash('success', 'Bericht verzonden!');
         $this->reset();
     }
 };
