@@ -45,13 +45,12 @@ new class extends Component
 
 
     // Bevestiging naar klant
-    Mail::to($this->email)
+    /* Mail::to($this->email)
         ->send(new ContactMail([
             'name' => $this->name,
             'email' => $this->email,
-/*             'message' => $this->message,
- */
-             'reply' => 'Bedankt voor je bericht. Wij hebben je aanvraag goed ontvangen en nemen zo snel mogelijk contact met je op.',        ]));
+
+             'reply' => 'Bedankt voor je bericht. Wij hebben je aanvraag goed ontvangen en nemen zo snel mogelijk contact met je op.',        ])); */
 
 
     session()->flash('success', 'Bericht verzonden! Je krijgt ook een bevestiging per email.');
