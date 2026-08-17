@@ -40,8 +40,18 @@ new class extends Component
 
 
     // Mail naar jou
-    Mail::to('sayedzabi1987@gmail.com')
-        ->send(new ContactMail($data));
+    Mail::raw(
+        "Nieuw contactbericht\n\n" .
+        "Naam: {$this->name}\n" .
+        "E-mail: {$this->email}\n" .
+        "Telefoon: {$this->phone}\n" .
+        "Bedrijf: {$this->company}\n\n" .
+        "Bericht:\n{$this->message}",
+        function ($mail) {
+            $mail->to('sayedzabi1987@gmail.com')
+                 ->subject('Nieuw contactbericht - StofPicker');
+        }
+    );
 
 
     // Bevestiging naar klant
