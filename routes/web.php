@@ -7,6 +7,8 @@ use App\Livewire\Fabrikant\Create;
 use App\Models\Kleding;
 
 
+
+
 Route::get('/', function () {
     return view('welcome');
 })->name('home');
@@ -125,6 +127,11 @@ Route::get('fabrikant/show/{id}', function ($id) {
  Route::get('/order',[CartController::class,'order'])->name('order.post');
  
  Route::get('/order-success',[CartController::class,'orderSuccess'])->name('order.success');
+
+ //mijn maat
+ Route::get('/mijn-maat', function () {
+   return view('mijn-maat');
+})->name('mijn-maat');
 
 //over mij 
  Route::get('/over-mij', function () {

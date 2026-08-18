@@ -5,6 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Enums\Geslacht;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Models\SizeChart;
+
 
 class Kleding extends Model
 {
@@ -25,6 +28,11 @@ class Kleding extends Model
     public function fotos()
     {
         return $this->hasMany(KledingFoto::class);
+    }
+
+    public function sizeChart(): BelongsTo
+    {
+        return $this->belongsTo(SizeChart::class);
     }
 
     protected $casts = [

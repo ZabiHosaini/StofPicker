@@ -260,6 +260,47 @@ new class extends Component
                         </span>
 
                     </a>
+                    {{-- Mijn maat --}}
+                    <a
+                    href="{{ route('mijn-maat') }}"
+                    class="
+                        flex items-center gap-3
+                        px-3 py-3
+                        rounded-xl
+                        text-gray-600
+                        hover:bg-blue-50
+                        hover:text-blue-600
+                        transition
+                    "
+                    >
+
+                    <span class="w-6 h-6 flex items-center justify-center">
+                        <svg
+                            class="w-5 h-5"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M4 4h16v16H4z"
+                            />
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M8 4v4M12 4v2M16 4v4M8 20v-4M12 20v-2M16 20v-4"
+                            />
+                        </svg>
+                    </span>
+
+                    <span class="font-medium">
+                        Mijn maat
+                    </span>
+
+                    </a>
 
 
                    

@@ -53,20 +53,100 @@ new class extends Component
 
 <div class="min-h-screen bg-slate-50 py-10 px-4 sm:px-6 lg:px-8">
 
-    {{-- SUCCESS MESSAGE --}}
-    @if (session('success'))
-        <div
-            x-data="{ show: true }"
-            x-init="setTimeout(() => show = false, 4000)"
-            x-show="show"
-            x-transition
-            class="fixed top-5 right-5 z-50 max-w-sm w-full"
-        >
-            <div class="rounded-2xl bg-white shadow-xl border border-green-100 p-4">
-                <div class="flex items-start gap-3">
-                    <div class="flex-shrink-0">
-                        <div class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center">
-                            <svg class="w-5 h-5 text-green-600"
+    <section class="max-w-5xl mx-auto">
+
+        <div class="grid lg:grid-cols-5 bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-200">
+
+            {{-- LEFT SIDE --}}
+            <div class="lg:col-span-2 bg-slate-900 text-white p-8 lg:p-10">
+
+                {{-- ICON --}}
+                <div class="flex items-center justify-center w-14 h-14 rounded-2xl bg-blue-600 mb-6">
+                    <svg class="w-7 h-7"
+                         fill="none"
+                         stroke="currentColor"
+                         viewBox="0 0 24 24">
+                        <path stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                              d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                    </svg>
+                </div>
+
+                <h1 class="text-3xl font-bold mb-4">
+                    Vind jouw maat
+                </h1>
+
+                <p class="text-slate-300 leading-relaxed mb-10">
+                    Met jouw lichaamsmaten kunnen we bepalen welke maat
+                    wielerkleding het beste bij je past.
+                </p>
+
+
+                {{-- INFO --}}
+                <div class="space-y-6">
+
+                    {{-- MEASUREMENT --}}
+                    <div class="flex gap-4">
+
+                        <div class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center flex-shrink-0">
+                            <svg class="w-5 h-5"
+                                 fill="none"
+                                 stroke="currentColor"
+                                 viewBox="0 0 24 24">
+                                <path stroke-linecap="round"
+                                      stroke-linejoin="round"
+                                      stroke-width="2"
+                                      d="M4 6h16M4 12h16M4 18h16"/>
+                            </svg>
+                        </div>
+
+                        <div>
+                            <p class="text-sm text-slate-400">
+                                Lichaamsmaten
+                            </p>
+
+                            <p class="font-medium">
+                                Meet jezelf in centimeters
+                            </p>
+                        </div>
+
+                    </div>
+
+
+                    {{-- ACCURACY --}}
+                    <div class="flex gap-4">
+
+                        <div class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center flex-shrink-0">
+                            <svg class="w-5 h-5"
+                                 fill="none"
+                                 stroke="currentColor"
+                                 viewBox="0 0 24 24">
+                                <path stroke-linecap="round"
+                                      stroke-linejoin="round"
+                                      stroke-width="2"
+                                      d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                        </div>
+
+                        <div>
+                            <p class="text-sm text-slate-400">
+                                Persoonlijk advies
+                            </p>
+
+                            <p class="font-medium">
+                                Afgestemd op jouw lichaam
+                            </p>
+                        </div>
+
+                    </div>
+
+
+                    {{-- RESULT --}}
+                    <div class="flex gap-4">
+
+                        <div class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center flex-shrink-0">
+                            <svg class="w-5 h-5"
                                  fill="none"
                                  stroke="currentColor"
                                  viewBox="0 0 24 24">
@@ -76,278 +156,314 @@ new class extends Component
                                       d="M5 13l4 4L19 7"/>
                             </svg>
                         </div>
+
+                        <div>
+                            <p class="text-sm text-slate-400">
+                                Resultaat
+                            </p>
+
+                            <p class="font-medium">
+                                Ontvang direct je maatadvies
+                            </p>
+                        </div>
+
                     </div>
 
-                    <div>
-                        <h3 class="font-bold text-slate-900">
-                            Bericht verzonden
-                        </h3>
+                </div>
 
-                        <p class="text-sm text-slate-600 mt-1">
-                            {{ session('success') }}
+
+                {{-- RESULT ON LEFT --}}
+                @if ($this->result !== null)
+
+                    <div class="mt-10 pt-8 border-t border-white/10">
+
+                        <p class="text-sm text-slate-400">
+                            Jouw aanbevolen maat
                         </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    @endif
 
-
-    {{-- CONTACT CARD --}}
-    <section class="max-w-5xl mx-auto">
-
-        <div class="grid lg:grid-cols-5 bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-200">
-
-            {{-- LEFT SIDE --}}
-            <div class="lg:col-span-2 bg-slate-900 text-white p-8 lg:p-10">
-
-                <div class="flex items-center justify-center w-14 h-14 rounded-2xl bg-blue-600 mb-6">
-                    <svg class="w-7 h-7"
-                         fill="none"
-                         stroke="currentColor"
-                         viewBox="0 0 24 24">
-                        <path stroke-linecap="round"
-                              stroke-linejoin="round"
-                              stroke-width="2"
-                              d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
-                    </svg>
-                </div>
-
-                <h1 class="text-3xl font-bold mb-4">
-                    Neem contact op
-                </h1>
-
-                <p class="text-slate-300 leading-relaxed mb-10">
-                    Heb je een vraag over onze wielerkleding, je bestelling
-                    of wil je meer informatie? Stuur ons gerust een bericht.
-                </p>
-
-
-                <div class="space-y-6">
-
-                    {{-- EMAIL --}}
-                    <div class="flex gap-4">
-                        <div class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center flex-shrink-0">
-                            <svg class="w-5 h-5"
-                                 fill="none"
-                                 stroke="currentColor"
-                                 viewBox="0 0 24 24">
-                                <path stroke-linecap="round"
-                                      stroke-linejoin="round"
-                                      stroke-width="2"
-                                      d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8"/>
-                                <path stroke-linecap="round"
-                                      stroke-linejoin="round"
-                                      stroke-width="2"
-                                      d="M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
-                            </svg>
+                        <div class="mt-2 text-6xl font-black text-white">
+                            {{ $this->result }}
                         </div>
 
-                        <div>
-                            <p class="text-sm text-slate-400">
-                                E-mail
-                            </p>
-
-                            <p class="font-medium">
-                                sayedzabi1987@gmail.com
-                            </p>
-                        </div>
                     </div>
 
-
-                    {{-- PHONE --}}
-                    <div class="flex gap-4">
-                        <div class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center flex-shrink-0">
-                            <svg class="w-5 h-5"
-                                 fill="none"
-                                 stroke="currentColor"
-                                 viewBox="0 0 24 24">
-                                <path stroke-linecap="round"
-                                      stroke-linejoin="round"
-                                      stroke-width="2"
-                                      d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498A1 1 0 0121 15.72V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
-                            </svg>
-                        </div>
-
-                        <div>
-                            <p class="text-sm text-slate-400">
-                                Telefoon
-                            </p>
-
-                            <p class="font-medium">
-                                Neem contact met ons op
-                            </p>
-                        </div>
-                    </div>
-
-
-                    {{-- RESPONSE --}}
-                    <div class="flex gap-4">
-                        <div class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center flex-shrink-0">
-                            <svg class="w-5 h-5"
-                                 fill="none"
-                                 stroke="currentColor"
-                                 viewBox="0 0 24 24">
-                                <path stroke-linecap="round"
-                                      stroke-linejoin="round"
-                                      stroke-width="2"
-                                      d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                            </svg>
-                        </div>
-
-                        <div>
-                            <p class="text-sm text-slate-400">
-                                Reactietijd
-                            </p>
-
-                            <p class="font-medium">
-                                Zo snel mogelijk
-                            </p>
-                        </div>
-                    </div>
-
-                </div>
+                @endif
 
             </div>
 
 
-            {{-- RIGHT SIDE / FORM --}}
+            {{-- RIGHT SIDE --}}
             <div class="lg:col-span-3 p-8 lg:p-10">
 
                 <div class="mb-8">
+
                     <h2 class="text-2xl font-bold text-slate-900">
-                        Stuur ons een bericht
+                        Bereken je maat
                     </h2>
 
                     <p class="text-slate-500 mt-2">
-                        Vul het formulier hieronder in en we nemen zo snel
-                        mogelijk contact met je op.
+                        Vul hieronder je lichaamsmaten in. Gebruik een
+                        meetlint en vul alles in centimeters in.
                     </p>
+
                 </div>
 
 
-                <form wire:submit.prevent="send" class="space-y-5">
+                {{-- FORM --}}
+                <form wire:submit.prevent="calculate" class="space-y-5">
 
-                    {{-- NAME + EMAIL --}}
+                    {{-- HEIGHT + CHEST --}}
                     <div class="grid md:grid-cols-2 gap-5">
 
+                        {{-- HEIGHT --}}
                         <div>
+
                             <label class="block text-sm font-semibold text-slate-700 mb-2">
-                                Naam
+                                Lengte
                             </label>
 
-                            <input
-                                type="text"
-                                wire:model="name"
-                                placeholder="Uw naam"
-                                class="w-full rounded-xl border border-slate-300 bg-slate-50
-                                       px-4 py-3 outline-none transition
-                                       focus:bg-white focus:border-blue-500 focus:ring-4
-                                       focus:ring-blue-100"
-                            >
+                            <div class="relative">
 
-                            @error('name')
+                                <input
+                                    type="number"
+                                    step="0.1"
+                                    wire:model="height"
+                                    placeholder="Bijv. 178"
+                                    class="w-full rounded-xl border border-slate-300 bg-slate-50
+                                           px-4 py-3 pr-14 outline-none transition
+                                           focus:bg-white focus:border-blue-500 focus:ring-4
+                                           focus:ring-blue-100"
+                                >
+
+                                <span class="absolute right-4 top-3.5 text-sm text-slate-400">
+                                    cm
+                                </span>
+
+                            </div>
+
+                            @error('height')
                                 <span class="block mt-1 text-sm text-red-500">
                                     {{ $message }}
                                 </span>
                             @enderror
+
                         </div>
 
 
+                        {{-- CHEST --}}
                         <div>
+
                             <label class="block text-sm font-semibold text-slate-700 mb-2">
-                                E-mail
+                                Borst
                             </label>
 
-                            <input
-                                type="email"
-                                wire:model="email"
-                                placeholder="naam@email.nl"
-                                class="w-full rounded-xl border border-slate-300 bg-slate-50
-                                       px-4 py-3 outline-none transition
-                                       focus:bg-white focus:border-blue-500 focus:ring-4
-                                       focus:ring-blue-100"
-                            >
+                            <div class="relative">
 
-                            @error('email')
+                                <input
+                                    type="number"
+                                    step="0.1"
+                                    wire:model="chest"
+                                    placeholder="Bijv. 96"
+                                    class="w-full rounded-xl border border-slate-300 bg-slate-50
+                                           px-4 py-3 pr-14 outline-none transition
+                                           focus:bg-white focus:border-blue-500 focus:ring-4
+                                           focus:ring-blue-100"
+                                >
+
+                                <span class="absolute right-4 top-3.5 text-sm text-slate-400">
+                                    cm
+                                </span>
+
+                            </div>
+
+                            @error('chest')
                                 <span class="block mt-1 text-sm text-red-500">
                                     {{ $message }}
                                 </span>
                             @enderror
+
                         </div>
 
                     </div>
 
 
-                    {{-- PHONE + COMPANY --}}
+                    {{-- WAIST + HIPS --}}
                     <div class="grid md:grid-cols-2 gap-5">
 
+                        {{-- WAIST --}}
                         <div>
+
                             <label class="block text-sm font-semibold text-slate-700 mb-2">
-                                Telefoon
+                                Taille
                             </label>
 
-                            <input
-                                type="text"
-                                wire:model="phone"
-                                placeholder="+31 6 12345678"
-                                class="w-full rounded-xl border border-slate-300 bg-slate-50
-                                       px-4 py-3 outline-none transition
-                                       focus:bg-white focus:border-blue-500 focus:ring-4
-                                       focus:ring-blue-100"
-                            >
+                            <div class="relative">
 
-                            @error('phone')
+                                <input
+                                    type="number"
+                                    step="0.1"
+                                    wire:model="waist"
+                                    placeholder="Bijv. 82"
+                                    class="w-full rounded-xl border border-slate-300 bg-slate-50
+                                           px-4 py-3 pr-14 outline-none transition
+                                           focus:bg-white focus:border-blue-500 focus:ring-4
+                                           focus:ring-blue-100"
+                                >
+
+                                <span class="absolute right-4 top-3.5 text-sm text-slate-400">
+                                    cm
+                                </span>
+
+                            </div>
+
+                            @error('waist')
                                 <span class="block mt-1 text-sm text-red-500">
                                     {{ $message }}
                                 </span>
                             @enderror
+
                         </div>
 
 
+                        {{-- HIPS --}}
                         <div>
+
                             <label class="block text-sm font-semibold text-slate-700 mb-2">
-                                Bedrijf
+                                Heup
                             </label>
 
-                            <input
-                                type="text"
-                                wire:model="company"
-                                placeholder="Bedrijfsnaam"
-                                class="w-full rounded-xl border border-slate-300 bg-slate-50
-                                       px-4 py-3 outline-none transition
-                                       focus:bg-white focus:border-blue-500 focus:ring-4
-                                       focus:ring-blue-100"
-                            >
+                            <div class="relative">
 
-                            @error('company')
+                                <input
+                                    type="number"
+                                    step="0.1"
+                                    wire:model="hips"
+                                    placeholder="Bijv. 98"
+                                    class="w-full rounded-xl border border-slate-300 bg-slate-50
+                                           px-4 py-3 pr-14 outline-none transition
+                                           focus:bg-white focus:border-blue-500 focus:ring-4
+                                           focus:ring-blue-100"
+                                >
+
+                                <span class="absolute right-4 top-3.5 text-sm text-slate-400">
+                                    cm
+                                </span>
+
+                            </div>
+
+                            @error('hips')
                                 <span class="block mt-1 text-sm text-red-500">
                                     {{ $message }}
                                 </span>
                             @enderror
+
                         </div>
 
                     </div>
 
 
-                    {{-- MESSAGE --}}
+                    {{-- SHOULDER + SLEEVE --}}
+                    <div class="grid md:grid-cols-2 gap-5">
+
+                        {{-- SHOULDER --}}
+                        <div>
+
+                            <label class="block text-sm font-semibold text-slate-700 mb-2">
+                                Schouderbreedte
+                            </label>
+
+                            <div class="relative">
+
+                                <input
+                                    type="number"
+                                    step="0.1"
+                                    wire:model="shoulder"
+                                    placeholder="Bijv. 44"
+                                    class="w-full rounded-xl border border-slate-300 bg-slate-50
+                                           px-4 py-3 pr-14 outline-none transition
+                                           focus:bg-white focus:border-blue-500 focus:ring-4
+                                           focus:ring-blue-100"
+                                >
+
+                                <span class="absolute right-4 top-3.5 text-sm text-slate-400">
+                                    cm
+                                </span>
+
+                            </div>
+
+                            @error('shoulder')
+                                <span class="block mt-1 text-sm text-red-500">
+                                    {{ $message }}
+                                </span>
+                            @enderror
+
+                        </div>
+
+
+                        {{-- SLEEVE --}}
+                        <div>
+
+                            <label class="block text-sm font-semibold text-slate-700 mb-2">
+                                Mouwlengte
+                            </label>
+
+                            <div class="relative">
+
+                                <input
+                                    type="number"
+                                    step="0.1"
+                                    wire:model="sleeveLength"
+                                    placeholder="Bijv. 62"
+                                    class="w-full rounded-xl border border-slate-300 bg-slate-50
+                                           px-4 py-3 pr-14 outline-none transition
+                                           focus:bg-white focus:border-blue-500 focus:ring-4
+                                           focus:ring-blue-100"
+                                >
+
+                                <span class="absolute right-4 top-3.5 text-sm text-slate-400">
+                                    cm
+                                </span>
+
+                            </div>
+
+                            @error('sleeveLength')
+                                <span class="block mt-1 text-sm text-red-500">
+                                    {{ $message }}
+                                </span>
+                            @enderror
+
+                        </div>
+
+                    </div>
+
+
+                    {{-- INSEAM --}}
                     <div>
 
                         <label class="block text-sm font-semibold text-slate-700 mb-2">
-                            Bericht
+                            Binnenbeenlengte
                         </label>
 
-                        <textarea
-                            rows="6"
-                            wire:model="message"
-                            placeholder="Typ hier uw bericht..."
-                            class="w-full rounded-xl border border-slate-300 bg-slate-50
-                                   px-4 py-3 outline-none transition resize-none
-                                   focus:bg-white focus:border-blue-500 focus:ring-4
-                                   focus:ring-blue-100"
-                        ></textarea>
+                        <div class="relative">
 
-                        @error('message')
+                            <input
+                                type="number"
+                                step="0.1"
+                                wire:model="inseam"
+                                placeholder="Bijv. 82"
+                                class="w-full rounded-xl border border-slate-300 bg-slate-50
+                                       px-4 py-3 pr-14 outline-none transition
+                                       focus:bg-white focus:border-blue-500 focus:ring-4
+                                       focus:ring-blue-100"
+                            >
+
+                            <span class="absolute right-4 top-3.5 text-sm text-slate-400">
+                                cm
+                            </span>
+
+                        </div>
+
+                        @error('inseam')
                             <span class="block mt-1 text-sm text-red-500">
                                 {{ $message }}
                             </span>
@@ -370,11 +486,11 @@ new class extends Component
                         >
 
                             <span wire:loading.remove>
-                                📩 Bericht versturen
+                                📏 Mijn maat berekenen
                             </span>
 
                             <span wire:loading>
-                                Bericht wordt verzonden...
+                                Maat wordt berekend...
                             </span>
 
                         </button>
@@ -383,6 +499,46 @@ new class extends Component
 
                 </form>
 
+
+                {{-- RESULT CARD --}}
+                @if ($this->result !== null)
+
+                    <div class="mt-8 rounded-2xl border border-blue-100 bg-blue-50 p-6">
+
+                        <div class="flex items-center gap-4">
+
+                            <div class="w-12 h-12 rounded-xl bg-blue-600 text-white flex items-center justify-center flex-shrink-0">
+
+                                <svg class="w-6 h-6"
+                                     fill="none"
+                                     stroke="currentColor"
+                                     viewBox="0 0 24 24">
+                                    <path stroke-linecap="round"
+                                          stroke-linejoin="round"
+                                          stroke-width="2"
+                                          d="M5 13l4 4L19 7"/>
+                                </svg>
+
+                            </div>
+
+                            <div>
+
+                                <p class="text-sm text-blue-600 font-semibold">
+                                    Ons maatadvies
+                                </p>
+
+                                <p class="text-slate-900 text-xl font-bold">
+                                    Wij adviseren maat {{ $this->result }}
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                @endif
+
             </div>
 
         </div>
@@ -390,4 +546,4 @@ new class extends Component
     </section>
 
 </div>
-```
+
