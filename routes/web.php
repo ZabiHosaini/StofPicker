@@ -89,9 +89,9 @@ Route::get('fabrikant/show/{id}', function ($id) {
  //contact
  Route::get('contact', function(){
   
-    return view('contact')->name('contact');
+    return view('contact');
 
- });
+ })->name('contact');
 
  //wielrennen
 
