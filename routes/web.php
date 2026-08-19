@@ -91,7 +91,7 @@ Route::get('fabrikant/show/{id}', function ($id) {
   
     return view('contact');
 
- })->name('contact');
+ });
 
  //wielrennen
 
