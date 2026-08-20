@@ -156,7 +156,7 @@ new class extends Component
 
                                         @if(!empty($stof->foto))
                                             <img
-                                                src="{{ asset('images/' . $stof->foto) }}"
+                                                src="{{ asset('storage/' . $stof->foto) }}"
                                                 alt="{{ $stof->name }}"
                                                 class="w-full h-full object-cover"
                                             >
