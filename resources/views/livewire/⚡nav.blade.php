@@ -3,6 +3,7 @@
 use Livewire\Component;
 use Livewire\Attributes\On;
 use App\Models\Stof;
+use App\Models\Kleding;
 
 new class extends Component
 {
@@ -154,14 +155,18 @@ new class extends Component
                                     {{-- Afbeelding --}}
                                     <div class="w-12 h-12 rounded-xl overflow-hidden bg-gray-100 flex-shrink-0">
 
-                                        @if(!empty($stof->foto))
+                                        @if(!empty($value['foto']))
                                             <img
-                                                src="{{ asset('storage/' . $stof->foto) }}"
-                                                alt="{{ $stof->name }}"
-                                                class="w-full h-full object-cover"
+                                                class="h-14 w-14 object-cover rounded-xl bg-gray-100 ring-1 ring-gray-200"
+                                                src="{{ asset('storage/' . $value['foto']) }}"
+                                                alt="{{ $value['name'] }}"
                                             >
                                         @else
-                                            <div class="w-full h-full flex items-center justify-center">
+                                            <div
+                                                class="h-14 w-14 rounded-xl bg-gray-100
+                                                    ring-1 ring-gray-200
+                                                    flex items-center justify-center"
+                                            >
                                                 🧵
                                             </div>
                                         @endif
@@ -378,68 +383,63 @@ new class extends Component
 
                         @forelse(session('cart', []) as $key => $value)
 
-                            <div
-                                class="flex items-center gap-3
-                                       px-5 py-4
-                                       border-b border-gray-100
-                                       hover:bg-gray-50
-                                       transition"
-                            >
-
-                            <div class="flex items-center gap-3 p-3">
-
+                        @php
+                            $kleding = Kleding::with('fotos')->find($value['kleding_id']);
+                            $foto = $kleding?->fotos->first()?->foto;
+                        @endphp
+                    
+                        <div class="flex items-center gap-3 px-5 py-4 border-b border-gray-100">
+                    
+                            {{-- Foto uit Kleding database --}}
+                            @if($foto)
+                    
                                 <img
-                                    class="h-14 w-14 object-cover rounded-xl bg-gray-100 ring-1 ring-gray-200"
-                                    src="{{ asset('storage/wielrennen/visma.jpg') }}"
+                                    src="{{ asset('storage/' . $foto) }}"
                                     alt="{{ $value['name'] }}"
+                                    class="h-14 w-14 object-cover rounded-xl bg-gray-100 ring-1 ring-gray-200"
                                 >
-                            
-                                <div class="flex-1 min-w-0">
-                            
-                                    <p class="text-sm font-semibold text-gray-800 truncate">
-                                        {{ $value['name'] }}
-                                    </p>
-                            
-                                    <p class="text-xs text-gray-400 mt-1">
-                                        Aantal: {{ $value['aantalen'] }}
-                                    </p>
-                            
-                                    <p class="text-sm font-bold text-green-600 mt-1">
-                                        €{{ number_format($value['prijs'], 2, ',', '.') }}
-                                    </p>
-                            
+                    
+                            @else
+                    
+                                <div class="h-14 w-14 rounded-xl bg-gray-100 flex items-center justify-center">
+                                    👕
                                 </div>
-                            
-                            </div>
-
-                            </div>
-
-                        @empty
-
-                            <div class="px-5 py-10 text-center">
-
-                                <div
-                                    class="w-14 h-14 mx-auto
-                                           rounded-2xl
-                                           bg-gray-100
-                                           flex items-center justify-center
-                                           mb-3"
-                                >
-                                    🛒
-                                </div>
-
-                                <p class="font-semibold text-gray-700">
-                                    Je winkelwagen is leeg
+                    
+                            @endif
+                    
+                            <div class="flex-1 min-w-0">
+                    
+                                <p class="text-sm font-semibold text-gray-800 truncate">
+                                    {{ $value['name'] }}
                                 </p>
-
-                                <p class="text-sm text-gray-400 mt-1">
-                                    Voeg een product toe aan je winkelwagen.
+                    
+                                <p class="text-xs text-gray-400 mt-1">
+                                    Maat: {{ $value['size'] }}
                                 </p>
-
+                    
+                                <p class="text-xs text-gray-400 mt-1">
+                                    Aantal: {{ $value['aantalen'] }}
+                                </p>
+                    
+                                <p class="text-sm font-bold text-green-600 mt-1">
+                                    €{{ number_format($value['prijs'], 2, ',', '.') }}
+                                </p>
+                    
                             </div>
-
-                        @endforelse
-
+                    
+                        </div>
+                    
+                    @empty
+                    
+                        <div class="px-5 py-10 text-center">
+                            🛒
+                    
+                            <p class="font-semibold text-gray-700">
+                                Je winkelwagen is leeg
+                            </p>
+                        </div>
+                    
+                    @endforelse
                     </div>
 
 

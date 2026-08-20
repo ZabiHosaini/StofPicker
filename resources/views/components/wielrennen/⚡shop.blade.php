@@ -49,42 +49,45 @@ new class extends Component
     }
 
     public function addToCart($kledingId, $sizeId)
-    {
-        $kleding = Kleding::findOrFail($kledingId);
+{
+    $kleding = Kleding::with('fotos')->findOrFail($kledingId);
 
-        $size = $kleding->sizes()
-            ->where('sizes.id', $sizeId)
-            ->first();
+    $size = $kleding->sizes()
+        ->where('sizes.id', $sizeId)
+        ->first();
 
-        if (!$size || $size->pivot->stock <= 0) {
-            return;
-        }
-
-        $cartKey = $kledingId . '-' . $sizeId;
-
-        $cart = session('cart', []);
-
-        if (isset($cart[$cartKey])) {
-            $cart[$cartKey]['aantalen']++;
-        } else {
-            $cart[$cartKey] = [
-                'kleding_id' => $kledingId,
-                'size_id' => $sizeId,
-                'name' => $kleding->name,
-                'size' => $size->size,
-                'aantalen' => 1,
-                'prijs' => $kleding->prijs,
-            ];
-        }
-
-        $kleding->sizes()->updateExistingPivot($sizeId, [
-            'stock' => $size->pivot->stock - 1
-        ]);
-
-        session()->put('cart', $cart);
-
-        $this->dispatch('cart-updated');
+    if (!$size || $size->pivot->stock <= 0) {
+        return;
     }
+
+    $cartKey = $kledingId . '-' . $sizeId;
+
+    $cart = session('cart', []);
+
+    if (isset($cart[$cartKey])) {
+        $cart[$cartKey]['aantalen']++;
+    } else {
+        $cart[$cartKey] = [
+            'kleding_id' => $kledingId,
+            'size_id' => $sizeId,
+            'name' => $kleding->name,
+            'size' => $size->size,
+            'aantalen' => 1,
+            'prijs' => $kleding->prijs,
+
+            // Eerste foto uit database
+            'foto' => $kleding->fotos->first()?->foto,
+        ];
+    }
+
+    $kleding->sizes()->updateExistingPivot($sizeId, [
+        'stock' => $size->pivot->stock - 1
+    ]);
+
+    session()->put('cart', $cart);
+
+    $this->dispatch('cart-updated');
+}
 };
 ?>
 
